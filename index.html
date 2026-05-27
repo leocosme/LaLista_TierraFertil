@@ -1,0 +1,2423 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programación Tierra Fértil - Junio 2026</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #FAFAFA;
+      --panel: #FFFFFF;
+      --border: #E5E7EB;
+      --border-strong: #D1D5DB;
+      --text: #111827;
+      --muted: #6B7280;
+      --muted-2: #9CA3AF;
+      --blue: #2563EB;
+      --blue-hover: #1D4ED8;
+      --yellow: #FACC15;
+      --yellow-hover: #EAB308;
+      --pink: #EC4899;
+      --green: #10B981;
+      --purple: #7C3AED;
+      --orange: #F59E0B;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .14);
+      --soft-shadow: 0 8px 28px rgba(17, 24, 39, .08);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 86% 8%, rgba(255,255,255,.9), rgba(255,255,255,0) 360px),
+        linear-gradient(180deg, #F8FAFC 0%, #EEF2F7 100%);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .sidebar {
+      width: 300px;
+      min-width: 300px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 24px 20px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 28px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .brand-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #FFF7D6;
+      color: var(--text);
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: none;
+    }
+
+    .icon.small { width: 15px; height: 15px; }
+    .icon.blue { color: var(--blue); }
+    .icon.pink { color: var(--pink); }
+    .icon.yellow { color: #B77900; }
+    .icon.purple { color: var(--purple); }
+    .icon.red { color: #EF4444; }
+    .icon.green { color: var(--green); }
+    .icon.orange { color: var(--orange); }
+
+    .instrument-icon {
+      width: 20px;
+      height: 20px;
+      color: #374151;
+      flex-shrink: 0;
+    }
+
+    .instrument-icon.bajo { color: #7C3AED; }
+    .instrument-icon.bateria { color: #DC2626; }
+    .instrument-icon.guitarra { color: #F59E0B; }
+    .instrument-icon.electrica { color: #EC4899; }
+    .instrument-icon.piano { color: #2563EB; }
+    .instrument-icon.teclado { color: #0891B2; }
+    .instrument-icon.saxofon { color: #10B981; }
+    .instrument-icon.percusion { color: #14B8A6; }
+
+    .instrument-icon.missing {
+      color: #DC2626;
+    }
+
+    .menu {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 30px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 44px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #374151;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      transition: background .18s ease, color .18s ease;
+    }
+
+    .menu-item.active {
+      background: #F3F4F6;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .section-label {
+      margin: 0 0 12px;
+      color: #4B5563;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .search-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .search-wrap .icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    .filter-search {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0 12px 0 34px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 13px;
+      text-overflow: clip;
+      outline: none;
+      min-width: 0;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .filter-search:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, .05);
+    }
+
+    .accordion {
+      border-bottom: 1px solid var(--border);
+      padding: 6px 0;
+    }
+
+    .accordion-button {
+      width: 100%;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 0;
+    }
+
+    .accordion-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .accordion-button .chevron {
+      transition: transform .18s ease;
+    }
+
+    .accordion.is-collapsed .chevron {
+      transform: rotate(-90deg);
+    }
+
+    .accordion-content {
+      display: grid;
+      gap: 8px;
+      overflow: hidden;
+      max-height: 520px;
+      padding: 4px 0 10px;
+      transition: max-height .22s ease, opacity .18s ease, padding .18s ease;
+    }
+
+    .accordion.is-collapsed .accordion-content {
+      max-height: 0;
+      opacity: 0;
+      padding: 0;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 28px;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background .18s ease, border-color .18s ease, color .18s ease;
+    }
+
+    .filter-row span {
+      min-width: 0;
+    }
+
+    .filter-row input {
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1px solid #9CA3AF;
+      border-radius: 4px;
+      background: #fff;
+      transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .filter-row input:checked {
+      background: var(--text);
+      border-color: var(--text);
+      box-shadow: inset 0 0 0 3px var(--text);
+    }
+
+    .filter-row input:checked::after {
+      content: "";
+      display: block;
+      width: 7px;
+      height: 4px;
+      margin: 3px 0 0 3px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
+      transform: rotate(-45deg);
+    }
+
+    .filter-row.is-selected {
+      background: #F3F4F6;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .accordion[data-group="support"] .accordion-content {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      max-height: none;
+      padding-top: 6px;
+    }
+
+    .accordion[data-group="support"] .filter-row {
+      min-height: 30px;
+      gap: 6px;
+      padding: 6px 7px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      font-size: 12px;
+      line-height: 1.15;
+    }
+
+    .accordion[data-group="support"] .filter-row:hover,
+    .accordion[data-group="support"] .filter-row.is-selected {
+      border-color: var(--border-strong);
+      background: #F9FAFB;
+    }
+
+    .accordion[data-group="support"] .filter-row.is-selected {
+      border-color: var(--text);
+      background: #F3F4F6;
+    }
+
+    .accordion[data-group="support"] .filter-row input {
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+
+    .accordion[data-group="support"] .filter-row input:checked::after {
+      width: 6px;
+      height: 3px;
+      margin: 3px 0 0 2.5px;
+    }
+
+    .accordion[data-group="support"] .filter-row .icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .accordion[data-group="support"] .filter-row span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .role-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--blue);
+      flex: none;
+    }
+
+    .birthdays-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .birthday-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .birthday-item {
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 34px;
+      font-size: 13px;
+    }
+
+    .birthday-date {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 24px 32px;
+      position: relative;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      gap: 24px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .header-title-icon {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: background .18s ease;
+    }
+
+    .header-title-icon:hover {
+      background: #F3F4F6;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .mobile-title {
+      display: none;
+    }
+
+    .header-title p {
+      margin: 3px 0 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .header-button {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+
+    .header-button:hover {
+      background: #F9FAFB;
+      border-color: var(--border-strong);
+    }
+
+    .month-selector {
+      font-weight: 700;
+      border: 0;
+      background: transparent;
+    }
+
+    .view-toggle {
+      display: flex;
+      background: #F3F4F6;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3px;
+    }
+
+    .view-toggle button {
+      height: 34px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+
+    .view-toggle button.active {
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .week-selector {
+      display: none;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 14px;
+      padding: 0 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .week-selector.is-visible {
+      display: inline-flex;
+    }
+
+    .mobile-filter-button {
+      display: none;
+    }
+
+    .calendar-wrapper {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      min-height: 0;
+      height: calc(100vh - 130px);
+    }
+
+    .calendar-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 15;
+      pointer-events: none;
+      opacity: 0;
+      background: rgba(255, 255, 255, .62);
+      backdrop-filter: blur(5px) saturate(1.08);
+      -webkit-backdrop-filter: blur(5px) saturate(1.08);
+      transition: opacity .2s ease;
+    }
+
+    .calendar-wrapper.has-detail::after {
+      opacity: 1;
+    }
+
+    .filter-status {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      z-index: 14;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100% - 32px);
+      min-height: 36px;
+      padding: 8px 14px;
+      border: 1px solid rgba(229, 231, 235, .9);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      box-shadow: 0 14px 34px rgba(17, 24, 39, .12);
+      backdrop-filter: blur(14px) saturate(1.12);
+      -webkit-backdrop-filter: blur(14px) saturate(1.12);
+      font-size: 13px;
+      line-height: 1.2;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 10px);
+      transition: opacity .2s ease, transform .2s ease;
+      white-space: nowrap;
+    }
+
+    .filter-status.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .filter-status strong {
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .calendar-day-header {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .calendar-cell {
+      position: relative;
+      min-height: 0;
+      height: calc((100vh - 164px) / 5);
+      padding: 7px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+      overflow: hidden;
+      transition: background .18s ease, opacity .18s ease;
+    }
+
+    .calendar-cell:nth-child(7n) {
+      border-right: 0;
+    }
+
+    .calendar-cell:hover {
+      background: #F9FAFB;
+    }
+
+    .calendar-cell.outside-month .day-number {
+      color: var(--muted-2);
+    }
+
+    .calendar-cell.filtered-out {
+      opacity: .18;
+    }
+
+    .calendar-cell.has-birthday {
+      background: linear-gradient(180deg, rgba(236,72,153,0.08), rgba(236,72,153,0.02));
+    }
+
+    .calendar-cell.has-birthday:hover {
+      background: linear-gradient(180deg, rgba(236,72,153,0.11), rgba(249,250,251,1));
+    }
+
+    .calendar-wrapper.week-view .calendar-cell {
+      height: calc(100vh - 164px);
+      min-height: 460px;
+    }
+
+    .day-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 22px;
+    }
+
+    .day-number {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .day-number.selected {
+      background: var(--text);
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .birthday-markers {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .birthday-icon {
+      color: var(--pink);
+      width: 16px;
+      height: 16px;
+    }
+
+    .service-list {
+      display: grid;
+      gap: 3px;
+      margin-top: 4px;
+      max-height: calc(100% - 22px);
+      overflow: hidden;
+    }
+
+    .service-card {
+      border: 0;
+      width: 100%;
+      text-align: left;
+      border-radius: 9px;
+      padding: 3px 6px;
+      min-height: 0;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .service-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    }
+
+    .service-card.wednesday {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .service-card.wednesday:hover {
+      background: var(--blue-hover);
+    }
+
+    .service-card.sunday {
+      background: var(--yellow);
+      color: var(--text);
+    }
+
+    .service-card.sunday:hover {
+      background: var(--yellow-hover);
+    }
+
+    .service-time {
+      display: block;
+      font-size: 8.5px;
+      font-weight: 500;
+      line-height: 1.1;
+      margin-bottom: 0;
+    }
+
+    .service-name {
+      display: block;
+      font-size: 9.2px;
+      font-weight: 700;
+      line-height: 1.05;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .service-role {
+      display: none;
+      font-size: 9px;
+      font-weight: 500;
+      margin-top: 1px;
+      opacity: .88;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .service-detail-floating {
+      position: fixed;
+      left: var(--detail-left, 50%);
+      top: var(--detail-top, 96px);
+      width: min(400px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+      z-index: 20;
+      animation: floatIn .22s ease-out;
+    }
+
+    .service-detail-floating.is-closing {
+      animation: floatOut .16s ease-in forwards;
+    }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(8px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes floatOut {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to { opacity: 0; transform: translateY(8px) scale(.98); }
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .detail-date-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #374151;
+      font-size: 13px;
+    }
+
+    .close-detail {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #374151;
+      cursor: pointer;
+      transition: background .18s ease;
+    }
+
+    .close-detail:hover {
+      background: #F3F4F6;
+    }
+
+    .service-time-tabs {
+      display: flex;
+      gap: 6px;
+      margin: 8px 0 10px;
+      flex-wrap: wrap;
+    }
+
+    .service-time-tab {
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      font-size: 13px;
+      color: #374151;
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+
+    .service-time-tab.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+
+    .principal-block {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding-bottom: 9px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .principal-icon {
+      color: var(--blue);
+    }
+
+    .principal-name {
+      margin: 0;
+      color: var(--text);
+      font-size: 21px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .principal-role {
+      margin-top: 2px;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .detail-section {
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-section-title {
+      margin: 0 0 6px;
+      color: #374151;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 4px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 22px 1fr auto;
+      gap: 7px;
+      align-items: center;
+      color: #374151;
+      font-size: 12px;
+    }
+
+    .detail-row strong {
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .detail-row .muted {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .uniform-section {
+      margin-top: 9px;
+      padding: 10px;
+      border-radius: 16px;
+      background: #F9FAFB;
+      border: 1px solid var(--border);
+      color: #374151;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .uniform-section strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .uniform-visual {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .uniform-piece {
+      --piece-fill: #FFFFFF;
+      --piece-stroke: #6B7280;
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .uniform-piece svg {
+      width: 21px;
+      height: 21px;
+      stroke: var(--piece-stroke);
+      stroke-width: 1.8;
+      fill: var(--piece-fill);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: none;
+    }
+
+    .uniform-piece .uniform-shape {
+      fill: var(--piece-fill);
+      stroke: var(--piece-stroke);
+    }
+
+    .uniform-piece .uniform-detail {
+      fill: none;
+      stroke: var(--piece-stroke);
+      opacity: .58;
+    }
+
+    .uniform-piece .uniform-dot {
+      fill: rgba(255, 255, 255, .62);
+      stroke: none;
+    }
+
+    .uniform-piece .uniform-tie {
+      fill: var(--piece-accent, #111827);
+      stroke: var(--piece-accent, #111827);
+    }
+
+    .uniform-piece.icon-only {
+      min-height: 54px;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .uniform-piece.icon-only svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    .uniform-visual.uniform-gala {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .uniform-visual.uniform-nuevo {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .uniform-stack {
+      display: grid;
+      gap: 6px;
+    }
+
+    .uniform-visual.uniform-nuevo .uniform-piece.icon-only {
+      min-height: 100%;
+    }
+
+    .uniform-visual.uniform-nuevo .uniform-piece.icon-only svg {
+      width: 52px;
+      height: 52px;
+    }
+
+    .uniform-piece span {
+      display: block;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .uniform-piece small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .uniform-fallback {
+      color: #374151;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .unassigned {
+      color: #DC2626 !important;
+      font-weight: 600 !important;
+    }
+
+    .mobile-bottom-nav {
+      display: none;
+    }
+
+    .filter-drawer {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 28px 24px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow: auto;
+      }
+
+      body.mobile-scroll-locked {
+        overflow: hidden;
+      }
+
+      .app-shell {
+        display: block;
+        padding-bottom: 74px;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        padding: 16px;
+      }
+
+      .main-header {
+        display: grid;
+        gap: 16px;
+      }
+
+      .header-actions {
+        justify-content: space-between;
+      }
+
+      .header-title h1 {
+        font-size: 24px;
+      }
+
+      .desktop-title {
+        display: none;
+      }
+
+      .mobile-title {
+        display: inline;
+      }
+
+      .mobile-filter-button {
+        display: inline-flex;
+      }
+
+      .calendar-wrapper {
+        min-height: auto;
+        height: auto;
+        border-radius: 16px;
+      }
+
+      .calendar-day-header {
+        height: 34px;
+        font-size: 11px;
+      }
+
+      .calendar-cell {
+        min-height: 72px;
+        height: auto;
+        padding: 6px;
+      }
+
+      .calendar-wrapper.week-view .calendar-cell {
+        min-height: 250px;
+        height: auto;
+      }
+
+      .day-number {
+        font-size: 12px;
+      }
+
+      .day-number.selected {
+        width: 24px;
+        height: 24px;
+      }
+
+      .service-list {
+        margin-top: 4px;
+        gap: 3px;
+      }
+
+      .service-card {
+        padding: 3px 4px;
+        border-radius: 7px;
+        box-shadow: none;
+      }
+
+      .service-time {
+        font-size: 9px;
+      }
+
+      .service-name,
+      .service-role {
+        display: none;
+      }
+
+      .birthday-icon {
+        width: 13px;
+        height: 13px;
+      }
+
+      .service-detail-floating {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        height: min(88vh, calc(100vh - 18px));
+        height: min(88dvh, calc(100dvh - 18px));
+        max-height: calc(100vh - 18px);
+        max-height: calc(100dvh - 18px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: auto;
+        padding-bottom: calc(18px + env(safe-area-inset-bottom));
+        border-radius: 24px 24px 0 0;
+        animation: bottomSheetIn .22s ease-out;
+      }
+
+      @keyframes bottomSheetIn {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .mobile-bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        height: 64px;
+        background: var(--panel);
+        border-top: 1px solid var(--border);
+        z-index: 30;
+      }
+
+      .mobile-bottom-nav button {
+        display: grid;
+        place-items: center;
+        gap: 3px;
+        border: 0;
+        background: transparent;
+        color: #374151;
+        font-size: 11px;
+      }
+
+      .filter-drawer {
+        display: block;
+        position: fixed;
+        inset: auto 0 0 0;
+        max-height: 86vh;
+        transform: translateY(110%);
+        transition: transform .22s ease;
+        background: var(--panel);
+        border-radius: 24px 24px 0 0;
+        box-shadow: var(--shadow);
+        padding: 22px 20px 80px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        z-index: 40;
+      }
+
+      .filter-drawer.is-open {
+        transform: translateY(0);
+      }
+
+      .filter-drawer .sidebar {
+        display: block;
+        position: static;
+        width: auto;
+        min-width: 0;
+        height: auto;
+        border-right: 0;
+        padding: 0;
+      }
+
+      .filter-status {
+        bottom: 10px;
+        max-width: calc(100% - 20px);
+        min-height: 34px;
+        padding: 7px 11px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="desktopSidebar">
+      <div class="brand">
+        <div class="brand-main">
+          <span class="brand-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="m2 8 5 4 5-7 5 7 5-4-2 11H4Z"></path></svg></span>
+          <span>Tierra Fértil</span>
+        </div>
+        <svg class="icon small chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+      <nav class="menu" aria-label="Secciones">
+        <button class="menu-item active calendar-reset" type="button"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg><span>Calendario</span></button>
+        <button class="menu-item" type="button"><svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>Equipo</span></button>
+      </nav>
+      <div id="filterContent"></div>
+    </aside>
+
+    <div class="filter-drawer" id="filterDrawer">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-main">
+            <span class="brand-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="m2 8 5 4 5-7 5 7 5-4-2 11H4Z"></path></svg></span>
+            <span>Tierra Fértil</span>
+          </div>
+          <button class="close-detail" id="closeFilters" type="button" aria-label="Cerrar filtros"><svg class="icon small" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+        </div>
+        <nav class="menu" aria-label="Secciones móviles">
+          <button class="menu-item active calendar-reset" type="button"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg><span>Calendario</span></button>
+          <button class="menu-item" type="button"><svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>Equipo</span></button>
+        </nav>
+        <div id="mobileFilterContent"></div>
+      </aside>
+    </div>
+
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-title">
+          <button class="header-title-icon calendar-reset" type="button" aria-label="Limpiar filtros del calendario"><svg class="icon" style="width:28px;height:28px" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></button>
+          <div>
+            <h1><span class="desktop-title">Calendario</span><span class="mobile-title">La Lista Tierra Fertil</span></h1>
+            <p>Programación de servicios y eventos</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="header-button mobile-filter-button" id="openFilters" type="button"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg> Filtros</button>
+          <button class="header-button" type="button">Hoy</button>
+          <button class="header-button" type="button" aria-label="Mes anterior"><svg class="icon small" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button>
+          <button class="header-button" type="button" aria-label="Mes siguiente"><svg class="icon small" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></button>
+          <button class="header-button month-selector" type="button">Junio 2026 <svg class="icon small chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button>
+          <select class="week-selector" id="weekSelector" aria-label="Seleccionar semana">
+            <option value="0">Semana 1</option>
+            <option value="1">Semana 2</option>
+            <option value="2">Semana 3</option>
+            <option value="3">Semana 4</option>
+            <option value="4">Semana 5</option>
+          </select>
+          <div class="view-toggle" aria-label="Selector de vista">
+            <button class="active" type="button" data-view="month">Mes</button>
+            <button type="button" data-view="week">Semana</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="calendar-wrapper" id="calendarWrapper" aria-label="Calendario Junio 2026">
+        <div class="calendar-grid" id="weekdayGrid"></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="filter-status" id="filterStatus" aria-live="polite"></div>
+        <div id="serviceDetailMount"></div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-bottom-nav" aria-label="Navegación móvil">
+    <button class="calendar-reset" type="button"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg><span>Calendario</span></button>
+    <button type="button"><svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>Equipo</span></button>
+  </nav>
+
+  <script>
+    const APP_DATA = {
+  "schedule": [
+    {
+      "date": "2026-06-03",
+      "day": "Miercoles",
+      "time": "5:00 pm - 7:00 pm",
+      "principal": "Hector Velez",
+      "voices": [
+        "Dulfais Nupan",
+        "Gloria Giraldo",
+        "Claudia Marquez",
+        "Elizabeth Bonilla"
+      ],
+      "musicians": {
+        "Bajo": "Jahdiel Lopez",
+        "Batería": "Andres Velez",
+        "Piano": "Alberth Martinez",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "Wilder Marroquin"
+      },
+      "uniform": "ROJO Y NEGRO",
+      "notes": "Alberth en piano 5pm; voces nuevas apoyadas por Claudia y Elizabeth."
+    },
+    {
+      "date": "2026-06-03",
+      "day": "Miercoles",
+      "time": "7:00 pm - 9:00 pm",
+      "principal": "Emilio Cortes",
+      "voices": [
+        "Dayana Cordoba",
+        "Caridad",
+        "Elizabeth Bonilla",
+        "Janner Balanta"
+      ],
+      "musicians": {
+        "Bajo": "No asignado",
+        "Batería": "Wilder Marroquin",
+        "Piano": "Ezequiel Cosme",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "No asignado"
+      },
+      "uniform": "ROJO Y NEGRO",
+      "notes": "Servicio 7pm sin cruce musical con domingo 7; Dayana no comparte servicio con Jahdiel; Caridad apoyada por Dayana y Elizabeth."
+    },
+    {
+      "date": "2026-06-07",
+      "day": "Domingo",
+      "time": "8:00 am - 10:00 am",
+      "principal": "Emilio Cortes",
+      "voices": [
+        "Claudia Marquez",
+        "Dayana Cordoba",
+        "Gloria Guerrero",
+        "Elizabeth Bonilla"
+      ],
+      "musicians": {
+        "Bajo": "Leandro Cosme",
+        "Batería": "Ramiro Espinoza",
+        "Piano": "Cristian Potes",
+        "Guitarra": "Jhoan Mosquera",
+        "Saxofón": "No asignado",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "BLANCO Y GRIS",
+      "notes": "Jhoan solo en guitarra. Mismo equipo que 10:30 am."
+    },
+    {
+      "date": "2026-06-07",
+      "day": "Domingo",
+      "time": "10:30 am - 12:30 pm",
+      "principal": "Emilio Cortes",
+      "voices": [
+        "Claudia Marquez",
+        "Dayana Cordoba",
+        "Gloria Guerrero",
+        "Elizabeth Bonilla"
+      ],
+      "musicians": {
+        "Bajo": "Leandro Cosme",
+        "Batería": "Ramiro Espinoza",
+        "Piano": "Cristian Potes",
+        "Guitarra": "Jhoan Mosquera",
+        "Saxofón": "No asignado",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "BLANCO Y GRIS",
+      "notes": "Jhoan solo en guitarra. Mismo equipo que 8:00 am."
+    },
+    {
+      "date": "2026-06-10",
+      "day": "Miercoles",
+      "time": "5:00 pm - 7:00 pm",
+      "principal": "Katherine Choco",
+      "voices": [
+        "Carlos Rua",
+        "Marly Mosquera",
+        "Dorany Gonzalez",
+        "Elizabeth Bonilla"
+      ],
+      "musicians": {
+        "Bajo": "Jahdiel Lopez",
+        "Batería": "Wilder Marroquin",
+        "Piano": "Ramiro Espinoza",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "No asignado"
+      },
+      "uniform": "GALA",
+      "notes": "Ramiro en piano 5pm; voz principal mujer con apoyo masculino de Carlos."
+    },
+    {
+      "date": "2026-06-10",
+      "day": "Miercoles",
+      "time": "7:00 pm - 9:00 pm",
+      "principal": "Hector Velez",
+      "voices": [
+        "Beatriz Vasquez",
+        "Gina Palacios",
+        "Deisy Murillo",
+        "Maira Caicedo"
+      ],
+      "musicians": {
+        "Bajo": "Leandro Cosme",
+        "Batería": "Ramiro Espinoza",
+        "Piano": "Alberth Martinez",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "No asignado"
+      },
+      "uniform": "GALA",
+      "notes": "Servicio 7pm sin cruce musical con domingo 14; Deisy apoyada por Maira."
+    },
+    {
+      "date": "2026-06-14",
+      "day": "Domingo",
+      "time": "8:00 am - 10:00 am",
+      "principal": "Jahdiel Lopez",
+      "voices": [
+        "Dulfais Nupan",
+        "Gloria Giraldo",
+        "Elizabeth Bonilla",
+        "Ximena Carabali"
+      ],
+      "musicians": {
+        "Bajo": "Cristian Potes",
+        "Batería": "Andres Velez",
+        "Piano": "Ezequiel Cosme",
+        "Guitarra": "No asignado",
+        "Saxofón": "Jhoan Mosquera",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "NUEVO",
+      "notes": "Jhoan solo en saxofon. Dulfais y Gloria apoyadas por Elizabeth."
+    },
+    {
+      "date": "2026-06-14",
+      "day": "Domingo",
+      "time": "10:30 am - 12:30 pm",
+      "principal": "Jahdiel Lopez",
+      "voices": [
+        "Dulfais Nupan",
+        "Gloria Giraldo",
+        "Elizabeth Bonilla",
+        "Ximena Carabali"
+      ],
+      "musicians": {
+        "Bajo": "Cristian Potes",
+        "Batería": "Andres Velez",
+        "Piano": "Ezequiel Cosme",
+        "Guitarra": "No asignado",
+        "Saxofón": "Jhoan Mosquera",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "NUEVO",
+      "notes": "Jhoan solo en saxofon. Mismo equipo que 8:00 am."
+    },
+    {
+      "date": "2026-06-17",
+      "day": "Miercoles",
+      "time": "5:00 pm - 7:00 pm",
+      "principal": "Maira Caicedo",
+      "voices": [
+        "Carlos Rua",
+        "Claudia Marquez",
+        "Caridad",
+        "Gloria Guerrero"
+      ],
+      "musicians": {
+        "Bajo": "No asignado",
+        "Batería": "Ramiro Espinoza",
+        "Piano": "Alberth Martinez",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "Wilder Marroquin"
+      },
+      "uniform": "BLANCO Y GRIS",
+      "notes": "Alberth cubre piano 5pm; Potes, Leandro y Josue no se programan 5pm; voz principal mujer con apoyo masculino."
+    },
+    {
+      "date": "2026-06-17",
+      "day": "Miercoles",
+      "time": "7:00 pm - 9:00 pm",
+      "principal": "Hector Velez",
+      "voices": [
+        "Janner Balanta",
+        "Maribel Montoya",
+        "Deisy Murillo",
+        "Elizabeth Bonilla"
+      ],
+      "musicians": {
+        "Bajo": "No asignado",
+        "Batería": "Andres Velez",
+        "Piano": "Ezequiel Cosme",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "Wilder Marroquin"
+      },
+      "uniform": "BLANCO Y GRIS",
+      "notes": "Servicio 7pm sin cruce musical con domingo 21; Deisy apoyada por Elizabeth."
+    },
+    {
+      "date": "2026-06-21",
+      "day": "Domingo",
+      "time": "8:00 am - 10:00 am",
+      "principal": "Ramiro Espinoza",
+      "voices": [
+        "Marly Mosquera",
+        "Dorany Gonzalez",
+        "Carlos Rua",
+        "Maira Caicedo"
+      ],
+      "musicians": {
+        "Bajo": "Jahdiel Lopez",
+        "Batería": "Leandro Cosme",
+        "Piano": "Cristian Potes",
+        "Guitarra": "Jhoan Mosquera",
+        "Saxofón": "No asignado",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "LILA Y GRIS",
+      "notes": "Jhoan solo en guitarra. Sin Alberth en domingo."
+    },
+    {
+      "date": "2026-06-21",
+      "day": "Domingo",
+      "time": "10:30 am - 12:30 pm",
+      "principal": "Ramiro Espinoza",
+      "voices": [
+        "Marly Mosquera",
+        "Dorany Gonzalez",
+        "Carlos Rua",
+        "Maira Caicedo"
+      ],
+      "musicians": {
+        "Bajo": "Jahdiel Lopez",
+        "Batería": "Leandro Cosme",
+        "Piano": "Cristian Potes",
+        "Guitarra": "Jhoan Mosquera",
+        "Saxofón": "No asignado",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "LILA Y GRIS",
+      "notes": "Jhoan solo en guitarra. Mismo equipo que 8:00 am."
+    },
+    {
+      "date": "2026-06-24",
+      "day": "Miercoles",
+      "time": "5:00 pm - 7:00 pm",
+      "principal": "Katherine Choco",
+      "voices": [
+        "Carlos Rua",
+        "Gloria Giraldo",
+        "Claudia Marquez",
+        "Elizabeth Bonilla"
+      ],
+      "musicians": {
+        "Bajo": "Jahdiel Lopez",
+        "Batería": "Andres Velez",
+        "Piano": "Ramiro Espinoza",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "No asignado"
+      },
+      "uniform": "ROJO Y NEGRO",
+      "notes": "Ramiro en piano 5pm; Potes, Leandro y Josue no se programan 5pm; voz principal mujer con apoyo masculino."
+    },
+    {
+      "date": "2026-06-24",
+      "day": "Miercoles",
+      "time": "7:00 pm - 9:00 pm",
+      "principal": "Maira Caicedo",
+      "voices": [
+        "Carlos Rua",
+        "Dulfais Nupan",
+        "Caridad",
+        "Claudia Marquez"
+      ],
+      "musicians": {
+        "Bajo": "Cristian Potes",
+        "Batería": "Ramiro Espinoza",
+        "Piano": "Ezequiel Cosme",
+        "Guitarra": "No asignado",
+        "Saxofón": "No asignado",
+        "Percusiones": "No asignado"
+      },
+      "uniform": "ROJO Y NEGRO",
+      "notes": "Servicio 7pm sin cruce musical con domingo 28; voz principal mujer con apoyo masculino; Dulfais y Caridad apoyadas por Claudia."
+    },
+    {
+      "date": "2026-06-28",
+      "day": "Domingo",
+      "time": "8:00 am - 10:00 am",
+      "principal": "Hector Velez",
+      "voices": [
+        "Claudia Marquez",
+        "Elizabeth Bonilla",
+        "Janner Balanta",
+        "Caridad"
+      ],
+      "musicians": {
+        "Bajo": "Leandro Cosme",
+        "Batería": "Wilder Marroquin",
+        "Piano": "Dayana Cordoba",
+        "Guitarra": "No asignado",
+        "Saxofón": "Jhoan Mosquera",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "GALA",
+      "notes": "Dayana en piano 1 de 2; Jhoan solo en saxofon. Hector ministra su unico domingo."
+    },
+    {
+      "date": "2026-06-28",
+      "day": "Domingo",
+      "time": "10:30 am - 12:30 pm",
+      "principal": "Hector Velez",
+      "voices": [
+        "Claudia Marquez",
+        "Elizabeth Bonilla",
+        "Janner Balanta",
+        "Caridad"
+      ],
+      "musicians": {
+        "Bajo": "Leandro Cosme",
+        "Batería": "Wilder Marroquin",
+        "Piano": "Dayana Cordoba",
+        "Guitarra": "No asignado",
+        "Saxofón": "Jhoan Mosquera",
+        "Percusiones": "Josue Ovalles"
+      },
+      "uniform": "GALA",
+      "notes": "Dayana en piano 2 de 2. Mismo equipo que 8:00 am."
+    }
+  ],
+  "birthdays": [
+    {
+      "name": "Ezequiel Cosme",
+      "date": "2026-06-28",
+      "day": 28,
+      "label": "28 jun"
+    }
+  ]
+};
+  </script>
+  <script>
+    const icons = {
+      calendar: `<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>`,
+      users: `<svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+      search: `<svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>`,
+      chevronDown: `<svg class="icon small chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>`,
+      chevronLeft: `<svg class="icon small" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>`,
+      chevronRight: `<svg class="icon small" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg>`,
+      mic: `<svg class="icon blue" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><path d="M12 19v3"></path></svg>`,
+      mic2: `<svg class="icon" viewBox="0 0 24 24"><path d="M9 9v3a3 3 0 0 0 6 0V9"></path><path d="M12 2a3 3 0 0 0-3 3v4h6V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><path d="M12 19v3"></path></svg>`,
+      clock: `<svg class="icon small" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>`,
+      bass: `<svg class="icon purple" viewBox="0 0 24 24"><path d="M15 3h4v4l-3 3"></path><path d="M14 9 5 18"></path><path d="M7 16a3.2 3.2 0 1 0 4.5 4.5 3.2 3.2 0 0 0-4.5-4.5Z"></path><path d="M12 14c1.4 1.7 1.7 3.7.4 5"></path><path d="M16 5l3 3"></path></svg>`,
+      acoustic: `<svg class="icon orange" viewBox="0 0 24 24"><path d="M15 4h5v5"></path><path d="M13 11 5 19"></path><path d="M8 15a4 4 0 1 0 5 5 4 4 0 0 0-5-5Z"></path><circle cx="10.5" cy="17.5" r="1.2"></circle><path d="M15 8l2 2"></path></svg>`,
+      electric: `<svg class="icon purple" viewBox="0 0 24 24"><path d="m17 3 4 4-5 5"></path><path d="M14 10 6 18"></path><path d="M7 15 4 18l2 2 3-1 1 3 3-3-3-3Z"></path><path d="M18 6l2 2"></path></svg>`,
+      drum: `<svg class="icon red" viewBox="0 0 24 24"><circle cx="8" cy="10" r="3"></circle><circle cx="16" cy="10" r="3"></circle><path d="M6 15h12v3a6 2.5 0 0 1-12 0Z"></path><path d="m4 4 4 4M20 4l-4 4"></path></svg>`,
+      keyboard: `<svg class="icon blue" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M7 6v12M11 6v7M15 6v7M19 6v12"></path><path d="M3 13h18"></path></svg>`,
+      piano: `<svg class="icon blue" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"></path><path d="M7 6v12M10 6v8M13 6v8M16 6v8"></path><path d="M4 14h16"></path></svg>`,
+      sax: `<svg class="icon green" viewBox="0 0 24 24"><path d="M9 3c3 2 5 6 5 10v3"></path><path d="M13 16c0 3-2 5-5 5-2 0-4-1-4-3s2-3 4-2"></path><path d="M14 13h4l2 4"></path><path d="M9 3h4"></path></svg>`,
+      trumpet: `<svg class="icon orange" viewBox="0 0 24 24"><path d="M3 11h10"></path><path d="M13 8v6l7 3V5Z"></path><path d="M6 8v6M9 8v6"></path><path d="M4 14c0 2 2 3 4 3"></path></svg>`,
+      violin: `<svg class="icon purple" viewBox="0 0 24 24"><path d="M12 3v18"></path><path d="M8 7c-3 1-4 5-1 7 1 1 1 3 0 4 3 1 6-1 5-4"></path><path d="M16 7c3 1 4 5 1 7-1 1-1 3 0 4-3 1-6-1-5-4"></path><path d="M5 5l14 14"></path></svg>`,
+      flute: `<svg class="icon green" viewBox="0 0 24 24"><path d="M3 13h18"></path><circle cx="8" cy="13" r="1"></circle><circle cx="12" cy="13" r="1"></circle><circle cx="16" cy="13" r="1"></circle><path d="M20 10v6"></path></svg>`,
+      cajon: `<svg class="icon orange" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"></rect><circle cx="12" cy="11" r="2"></circle><path d="M9 18h6"></path></svg>`,
+      percussion: `<svg class="icon orange" viewBox="0 0 24 24"><path d="M6 8h12v11a6 2 0 0 1-12 0Z"></path><path d="M6 8a6 2 0 0 0 12 0"></path><path d="m7 3 4 4M17 3l-4 4"></path></svg>`,
+      cake: `<svg class="icon pink birthday-icon" viewBox="0 0 24 24"><path d="M4 21h16"></path><path d="M5 21V11h14v10"></path><path d="M8 11V7M12 11V7M16 11V7"></path><path d="M8 7c0-1 1-2 1-3 0 0 1 1 1 2a2 2 0 0 1-2 1ZM12 7c0-1 1-2 1-3 0 0 1 1 1 2a2 2 0 0 1-2 1ZM16 7c0-1 1-2 1-3 0 0 1 1 1 2a2 2 0 0 1-2 1Z"></path></svg>`,
+      tag: `<svg class="icon" viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"></path><circle cx="7" cy="7" r="1"></circle></svg>`,
+      shirt: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 4 4 6l-2 5 4 2 2-3v10h8V10l2 3 4-2-2-5-4-2-2 3h-4Z"></path></svg>`,
+      blouse: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 4 5 6 3 12l4 1 1-3 1 10h6l1-10 1 3 4-1-2-6-3-2-4 4Z"></path></svg>`,
+      pants: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 3h8l2 18h-5l-1-10-1 10H6Z"></path><path class="uniform-detail" d="M12 4v7"></path></svg>`,
+      skirt: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 4h8l3 17H5Z"></path><path class="uniform-detail" d="M9 4v17M15 4v17"></path></svg>`,
+      dress: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 2.8 11 9h2l3-6.2 4 1.4-1.7 4.5-2.2.9L21 22H3l4.9-12.4-2.2-.9L4 4.2Z"></path><path class="uniform-detail" d="M6.5 10h11M5 21h14"></path><circle class="uniform-dot" cx="8.8" cy="12.6" r=".55"></circle><circle class="uniform-dot" cx="14.2" cy="13.8" r=".55"></circle><circle class="uniform-dot" cx="11" cy="16.7" r=".55"></circle><circle class="uniform-dot" cx="16.4" cy="18.8" r=".5"></circle></svg>`,
+      galaDress: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 2.8 11 9h2l3-6.2 4 1.4-1.7 4.5-2.2.9L21 22H3l4.9-12.4-2.2-.9L4 4.2Z"></path><path class="uniform-detail" d="M6.5 10h11M5 21h14"></path></svg>`,
+      galaShirt: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M7.5 4.2h9L20 8.5c.8 1.5 1.2 4.6 1 9.2C18.5 19.2 15.5 20 12 20s-6.5-.8-9-2.3c-.2-4.6.2-7.7 1-9.2Z"></path><path class="uniform-detail" d="M8.2 4.7 12 18.5l3.8-13.8"></path><path class="uniform-tie" d="M10.7 6.2h2.6L12 8.1l1.6 6.2L12 18.5l-1.6-4.2L12 8.1Z"></path></svg>`,
+      x: `<svg class="icon small" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"></path></svg>`,
+      note: `<svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>`,
+      crown: `<svg class="icon" viewBox="0 0 24 24"><path d="m2 8 5 4 5-7 5 7 5-4-2 11H4Z"></path></svg>`
+    };
+
+    function instrumentIcon(role, missing = false) {
+      const classFor = (slug) => `instrument-icon ${slug}${missing ? " missing" : ""}`;
+      const key = role
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+      const map = {
+        bajo: `<svg class="${classFor("bajo")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3.5 20.5 8.5"/><path d="M18 6 9.5 14.5"/><path d="M7.8 10.8c-2.8.7-4.5 2.9-3.9 5.6.7 3 3.7 4.8 6.6 4 2.2-.6 3.3-2.2 3-4-.2-1.1-.9-1.8-2-2.2"/><path d="M8.1 16.2h.01"/><path d="M11 13 14 16"/><path d="M19.5 4.5h1.5v1.5"/></svg>`,
+        bateria: `<svg class="${classFor("bateria")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="15" r="4"/><path d="M8 15v3c0 1.5 1.8 2.5 4 2.5s4-1 4-2.5v-3"/><path d="M5 10h5"/><path d="M14 10h5"/><path d="M7.5 10v3"/><path d="M16.5 10v3"/><path d="M6 5l4 4"/><path d="M18 5l-4 4"/></svg>`,
+        guitarra: `<svg class="${classFor("guitarra")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3.5 20.5 8.5"/><path d="M18 6 10 14"/><path d="M8.3 10.8c-2.7.4-4.6 2.5-4.3 5.1.4 3 3.2 5.1 6.1 4.7 2.3-.3 3.7-1.9 3.5-3.7-.1-1.1-.8-1.9-1.8-2.4"/><circle cx="8.8" cy="16.3" r=".8"/><path d="M11.5 13.5 14.5 16.5"/><path d="M20 4h1v1"/></svg>`,
+        electrica: `<svg class="${classFor("electrica")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 3 5 5-6 6"/><path d="M14 11 8 17"/><path d="M7 13 3.5 16.5 6 18l-1 3 4-2 2 2 2-4-3-3Z"/><path d="M18.5 5.5 20 4"/><path d="M9.5 14.5 12.5 17.5"/></svg>`,
+        piano: `<svg class="${classFor("piano")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 6v12"/><path d="M11 6v12"/><path d="M15 6v12"/><path d="M19 6v12"/><path d="M9 6v6"/><path d="M13 6v6"/><path d="M17 6v6"/></svg>`,
+        teclado: `<svg class="${classFor("teclado")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M6 9h12"/><path d="M7 12v5"/><path d="M10 12v5"/><path d="M13 12v5"/><path d="M16 12v5"/><circle cx="7" cy="7" r=".5"/><circle cx="10" cy="7" r=".5"/></svg>`,
+        saxofon: `<svg class="${classFor("saxofon")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3c2 2 2.4 4.8 1.2 7.4"/><path d="M16.2 10.4c-1 2.2-3 3.6-5.7 4"/><path d="M10.5 14.4c-2.7 0-4.5 1.6-4.5 3.8 0 2 1.6 3.3 3.9 3.3 3.6 0 6.1-2.6 7.6-6.4"/><path d="M13 5 17 2"/><path d="M17 2l3 3"/><path d="M9.5 12.5 6.5 9.5"/><path d="M6.5 9.5 4.5 11.5"/><circle cx="12" cy="12" r=".5"/><circle cx="14" cy="10" r=".5"/></svg>`,
+        percusion: `<svg class="${classFor("percusion")}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="8" cy="7" rx="3.5" ry="1.8"/><path d="M4.5 7 5.5 18c.2 1.3 1.3 2.2 2.5 2.2s2.3-.9 2.5-2.2l1-11"/><ellipse cx="16" cy="8" rx="3.5" ry="1.8"/><path d="M12.5 8 13.5 18c.2 1.2 1.3 2 2.5 2s2.3-.8 2.5-2l1-10"/><path d="M5.5 4 4 2"/><path d="M18.5 4 20 2"/></svg>`
+      };
+      if (key.includes("electrica")) return map.electrica;
+      if (key.includes("teclado")) return map.teclado;
+      if (key.includes("piano")) return map.piano;
+      if (key.includes("bateria")) return map.bateria;
+      if (key.includes("saxofon")) return map.saxofon;
+      if (key.includes("percusion") || key.includes("percusiones")) return map.percusion;
+      if (key.includes("guitarra")) return map.guitarra;
+      if (key.includes("bajo")) return map.bajo;
+      return icons.users;
+    }
+
+    const roleIcons = {
+      "Bajo": instrumentIcon("Bajo"),
+      "Batería": instrumentIcon("Batería"),
+      "Piano": instrumentIcon("Piano"),
+      "Guitarra": instrumentIcon("Guitarra"),
+      "Guitarra eléctrica": instrumentIcon("Guitarra eléctrica"),
+      "Saxofón": instrumentIcon("Saxofón"),
+      "Trompeta": icons.trumpet,
+      "Violín": icons.violin,
+      "Percusiones": instrumentIcon("Percusiones"),
+      "Percusión": instrumentIcon("Percusión"),
+      "Cajón": icons.cajon,
+      "Flauta": icons.flute,
+      "Teclado": instrumentIcon("Teclado")
+    };
+
+    const schedule = APP_DATA.schedule;
+    const birthdays = APP_DATA.birthdays;
+    const state = {
+      selectedFilters: new Set(),
+      search: "",
+      selectedDate: "",
+      selectedServiceIndex: 0,
+      detailAnchor: null,
+      view: "month",
+      selectedWeek: 0
+    };
+
+    const byDate = new Map();
+    schedule.forEach(service => {
+      if (!byDate.has(service.date)) byDate.set(service.date, []);
+      byDate.get(service.date).push(service);
+    });
+
+    const birthdaysByDate = new Map();
+    birthdays.forEach(item => {
+      if (!birthdaysByDate.has(item.date)) birthdaysByDate.set(item.date, []);
+      birthdaysByDate.get(item.date).push(item);
+    });
+
+    const weekdayGrid = document.querySelector("#weekdayGrid");
+    const calendarGrid = document.querySelector("#calendarGrid");
+    const detailMount = document.querySelector("#serviceDetailMount");
+    const calendarWrapper = document.querySelector("#calendarWrapper");
+    const filterStatus = document.querySelector("#filterStatus");
+    const filterContent = document.querySelector("#filterContent");
+    const mobileFilterContent = document.querySelector("#mobileFilterContent");
+    const filterDrawer = document.querySelector("#filterDrawer");
+    const openFilters = document.querySelector("#openFilters");
+    const closeFilters = document.querySelector("#closeFilters");
+    const weekSelector = document.querySelector("#weekSelector");
+    const mobileMedia = window.matchMedia("(max-width: 768px)");
+    const mobileScrollLocks = new Set();
+    let lockedScrollY = 0;
+
+    const longDate = new Intl.DateTimeFormat("es-CO", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+    function applyMobileScrollLock() {
+      const shouldLock = mobileMedia.matches && mobileScrollLocks.size > 0;
+      if (shouldLock && !document.body.classList.contains("mobile-scroll-locked")) {
+        lockedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        document.body.classList.add("mobile-scroll-locked");
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${lockedScrollY}px`;
+        document.body.style.left = "0";
+        document.body.style.right = "0";
+        document.body.style.width = "100%";
+        return;
+      }
+
+      if (!shouldLock && document.body.classList.contains("mobile-scroll-locked")) {
+        document.body.classList.remove("mobile-scroll-locked");
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.width = "";
+        window.scrollTo(0, lockedScrollY);
+      }
+    }
+
+    function setMobileScrollLock(key, enabled) {
+      if (enabled) mobileScrollLocks.add(key);
+      else mobileScrollLocks.delete(key);
+      applyMobileScrollLock();
+    }
+
+    function openMobileFilters() {
+      filterDrawer?.classList.add("is-open");
+      bindContainedScroll(filterDrawer);
+      setMobileScrollLock("filters", true);
+    }
+
+    function closeMobileFilters() {
+      filterDrawer?.classList.remove("is-open");
+      setMobileScrollLock("filters", false);
+    }
+
+    function resetCalendarFilters() {
+      state.selectedFilters.clear();
+      state.search = "";
+      state.selectedDate = "";
+      state.selectedServiceIndex = 0;
+      state.detailAnchor = null;
+      closeMobileFilters();
+      closeDetail();
+      renderFilters(filterContent);
+      renderFilters(mobileFilterContent);
+      renderCalendar();
+      renderDetail();
+    }
+
+    function bindContainedScroll(element) {
+      if (!element || element.dataset.scrollContained === "true") return;
+      element.dataset.scrollContained = "true";
+      let startY = 0;
+
+      element.addEventListener("touchstart", event => {
+        startY = event.touches[0]?.clientY || 0;
+      }, { passive: true });
+
+      element.addEventListener("touchmove", event => {
+        if (!mobileMedia.matches) return;
+        const currentY = event.touches[0]?.clientY || 0;
+        const deltaY = currentY - startY;
+        const atTop = element.scrollTop <= 0;
+        const atBottom = Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight;
+
+        if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+    }
+
+    function isSunday(dateKey) {
+      return new Date(`${dateKey}T12:00:00`).getDay() === 0;
+    }
+
+    function initials(name) {
+      return name.split(" ").filter(Boolean).slice(0, 2).map(part => part[0]).join("").toUpperCase();
+    }
+
+    function peopleForService(service) {
+      return [
+        service.principal,
+        ...service.voices,
+        ...Object.values(service.musicians)
+      ].filter(name => name && name !== "No asignado");
+    }
+
+    function serviceMatchesFilters(service) {
+      if (!state.selectedFilters.size) return true;
+      const people = new Set(peopleForService(service));
+      return [...state.selectedFilters].some(name => people.has(name));
+    }
+
+    function selectedMinisterName() {
+      return [...state.selectedFilters][0] || "";
+    }
+
+    function renderFilterStatus() {
+      if (!filterStatus) return;
+      const name = selectedMinisterName();
+      filterStatus.classList.toggle("is-visible", Boolean(name));
+      filterStatus.innerHTML = name ? `Seleccionaste el ministro: <strong>${name}</strong>` : "";
+    }
+
+    function visibleServicesForDate(dateKey) {
+      const services = byDate.get(dateKey) || [];
+      return services.filter(serviceMatchesFilters);
+    }
+
+    function calendarCells() {
+      const all = [{ date: "2026-05-31", day: 31, outside: true }];
+      for (let day = 1; day <= 30; day++) all.push({ date: `2026-06-${String(day).padStart(2, "0")}`, day, outside: false });
+      for (let day = 1; day <= 4; day++) all.push({ date: `2026-07-${String(day).padStart(2, "0")}`, day, outside: true });
+      if (state.view === "week") {
+        const start = state.selectedWeek * 7;
+        return all.slice(start, start + 7);
+      }
+      return all;
+    }
+
+    function colorInfo(name = "") {
+      const key = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+      const map = {
+        ROJO: { fill: "#DC2626", stroke: "#991B1B", text: "Rojo" },
+        NEGRO: { fill: "#111827", stroke: "#020617", text: "Negro" },
+        GRIS: { fill: "#9CA3AF", stroke: "#6B7280", text: "Gris" },
+        BLANCO: { fill: "#FFFFFF", stroke: "#D1D5DB", text: "Blanco" },
+        AZUL: { fill: "#2563EB", stroke: "#1D4ED8", text: "Azul" },
+        VERDE: { fill: "#16A34A", stroke: "#15803D", text: "Verde" },
+        AMARILLO: { fill: "#FACC15", stroke: "#CA8A04", text: "Amarillo" },
+        NARANJA: { fill: "#F97316", stroke: "#C2410C", text: "Naranja" },
+        LILA: { fill: "#C4B5FD", stroke: "#7C3AED", text: "Lila" },
+        DORADO: { fill: "#D97706", stroke: "#B45309", text: "Dorado" },
+        BEIGE: { fill: "#D6C3A5", stroke: "#A78B65", text: "Beige" },
+        CAFE: { fill: "#92400E", stroke: "#78350F", text: "Café" },
+        MORADO: { fill: "#7C3AED", stroke: "#6D28D9", text: "Morado" },
+        ROSADO: { fill: "#EC4899", stroke: "#DB2777", text: "Rosado" }
+      };
+      return map[key] || null;
+    }
+
+    function parseUniform(uniform = "") {
+      const text = uniform.trim();
+      if (!text || /no asignado/i.test(text) || text.length > 34) return null;
+      const parts = text.split(/\s+Y\s+|\s*,\s*|\s*\/\s*/i).map(part => part.trim()).filter(Boolean);
+      const top = colorInfo(parts[0]);
+      const bottom = colorInfo(parts[1] || parts[0]);
+      if (!top || !bottom) return null;
+      return { top, bottom };
+    }
+
+    function uniformPiece(icon, label, color) {
+      return `
+        <div class="uniform-piece" style="--piece-fill:${color.fill}; --piece-stroke:${color.stroke};">
+          ${icon}
+          <span>${label}<small>${color.text}</small></span>
+        </div>
+      `;
+    }
+
+    function uniformIconOnly(icon, color, accent = "#111827") {
+      return `
+        <div class="uniform-piece icon-only" style="--piece-fill:${color.fill}; --piece-stroke:${color.stroke}; --piece-accent:${accent};">
+          ${icon}
+        </div>
+      `;
+    }
+
+    function uniformLabel(uniform) {
+      const text = String(uniform || "").trim();
+      if (!text || /no asignado/i.test(text)) return "";
+      return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+    }
+
+    function renderUniform(uniform) {
+      const key = String(uniform || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+      if (key === "NUEVO") {
+        const black = colorInfo("NEGRO");
+        const beige = colorInfo("BEIGE");
+        return `
+          <div class="uniform-visual uniform-nuevo">
+            <div class="uniform-stack">
+              ${uniformPiece(icons.shirt, "Camisa", black)}
+            ${uniformPiece(icons.pants, "Pantalón", beige)}
+            </div>
+            ${uniformIconOnly(icons.dress, black)}
+          </div>
+        `;
+      }
+      if (key === "GALA") {
+        const shirt = colorInfo("AZUL");
+        const dress = colorInfo("NARANJA") || { fill: "#F97316", stroke: "#C2410C", text: "Naranja" };
+        return `
+          <div class="uniform-visual uniform-gala">
+            ${uniformIconOnly(icons.galaShirt, shirt, "#F8FAFC")}
+            ${uniformIconOnly(icons.galaDress, dress)}
+          </div>
+        `;
+      }
+      const parsed = parseUniform(uniform);
+      if (!parsed) return `<div class="uniform-fallback">${uniform || "Uniforme no asignado."}</div>`;
+      return `
+        <div class="uniform-visual">
+          ${uniformPiece(icons.shirt, "Camisa", parsed.top)}
+          ${uniformPiece(icons.blouse, "Blusa", parsed.top)}
+          ${uniformPiece(icons.pants, "Pantalón", parsed.bottom)}
+          ${uniformPiece(icons.skirt, "Falda", parsed.bottom)}
+        </div>
+      `;
+    }
+
+    function uniqueSorted(values) {
+      return [...new Set(values.filter(Boolean).filter(v => v !== "No asignado"))].sort((a, b) => a.localeCompare(b, "es"));
+    }
+
+    function filterGroups() {
+      const principals = uniqueSorted(schedule.map(s => s.principal));
+      const support = uniqueSorted(schedule.flatMap(s => s.voices));
+      const musicianRoleMap = new Map();
+      schedule.forEach(service => {
+        Object.entries(service.musicians).forEach(([role, name]) => {
+          if (!name || name === "No asignado") return;
+          if (!musicianRoleMap.has(name)) musicianRoleMap.set(name, new Set());
+          musicianRoleMap.get(name).add(role);
+        });
+      });
+      const musicians = [...musicianRoleMap.entries()]
+        .map(([name, roles]) => ({ name, roles: [...roles].sort() }))
+        .sort((a, b) => a.name.localeCompare(b.name, "es"));
+      return { principals, support, musicians };
+    }
+
+    function visibleBySearch(name) {
+      return name.toLowerCase().includes(state.search.trim().toLowerCase());
+    }
+
+    function filterRow(name, category, extra = "") {
+      const checked = state.selectedFilters.has(name) ? "checked" : "";
+      const selectedClass = checked ? " is-selected" : "";
+      const icon = category === "principal" ? icons.mic : category === "support" ? icons.mic2 : extra;
+      return `
+        <label class="filter-row filter-row-${category}${selectedClass}" data-filter-name="${name}" title="${name}">
+          <input type="checkbox" value="${name}" ${checked}>
+          ${icon}
+          <span>${name}</span>
+        </label>
+      `;
+    }
+
+    function renderFilters(target) {
+      const groups = filterGroups();
+      const principalRows = groups.principals.filter(visibleBySearch).map(name => filterRow(name, "principal")).join("");
+      const supportRows = groups.support.filter(visibleBySearch).map(name => filterRow(name, "support")).join("");
+      const musicianRows = groups.musicians
+        .filter(item => visibleBySearch(item.name))
+        .map(item => filterRow(item.name, "musician", roleIcons[item.roles[0]] || icons.users))
+        .join("");
+      const birthdayRows = birthdays.length
+        ? birthdays.map(item => `
+          <div class="birthday-item">
+            <span class="icon pink">${icons.cake}</span>
+            <span>${item.name}</span>
+            <span class="birthday-date">${item.label}</span>
+          </div>
+        `).join("")
+        : `<p class="empty-state">No hay cumpleaños registrados este mes.</p>`;
+
+      target.innerHTML = `
+        <p class="section-label">Filtros de ministros</p>
+        <div class="search-wrap">
+          ${icons.search}
+          <input class="filter-search" type="search" placeholder="Buscar ministro..." value="${state.search}">
+        </div>
+        <section class="accordion" data-group="principals">
+          <button class="accordion-button" type="button">
+            <span class="accordion-title">${icons.mic} Vocalistas principales</span>
+            <span class="chevron">${icons.chevronDown}</span>
+          </button>
+          <div class="accordion-content">${principalRows || '<p class="empty-state">Sin coincidencias.</p>'}</div>
+        </section>
+        <section class="accordion" data-group="support">
+          <button class="accordion-button" type="button">
+            <span class="accordion-title">${icons.mic2} Voces de apoyo</span>
+            <span class="chevron">${icons.chevronDown}</span>
+          </button>
+          <div class="accordion-content">${supportRows || '<p class="empty-state">Sin coincidencias.</p>'}</div>
+        </section>
+        <section class="accordion" data-group="musicians">
+          <button class="accordion-button" type="button">
+            <span class="accordion-title">${icons.acoustic} Músicos</span>
+            <span class="chevron">${icons.chevronDown}</span>
+          </button>
+          <div class="accordion-content">${musicianRows || '<p class="empty-state">Sin coincidencias.</p>'}</div>
+        </section>
+        <section class="birthdays-section">
+          <p class="section-label">${icons.cake} Cumpleaños</p>
+          <div class="birthday-list">${birthdayRows}</div>
+        </section>
+      `;
+
+      target.querySelectorAll(".filter-search").forEach(input => {
+        input.addEventListener("input", event => {
+          const caret = event.target.selectionStart ?? event.target.value.length;
+          state.search = event.target.value;
+          renderFilters(target);
+          const nextInput = target.querySelector(".filter-search");
+          if (nextInput) {
+            nextInput.focus();
+            nextInput.setSelectionRange(caret, caret);
+          }
+        });
+      });
+
+      target.querySelectorAll(".accordion-button").forEach(button => {
+        button.addEventListener("click", () => {
+          button.closest(".accordion").classList.toggle("is-collapsed");
+        });
+      });
+
+      target.querySelectorAll('.filter-row input').forEach(input => {
+        input.addEventListener("change", event => {
+          const name = event.target.value;
+          const shouldCloseMobileFilters = target === mobileFilterContent && mobileMedia.matches;
+          state.selectedFilters.clear();
+          if (event.target.checked) state.selectedFilters.add(name);
+          state.selectedDate = "";
+          state.selectedServiceIndex = 0;
+          renderFilters(filterContent);
+          renderFilters(mobileFilterContent);
+          renderCalendar();
+          closeDetail();
+          if (shouldCloseMobileFilters) closeMobileFilters();
+        });
+      });
+    }
+
+    function serviceCard(service, index) {
+      const variant = isSunday(service.date) ? "sunday" : "wednesday";
+      return `
+        <button class="service-card ${variant}" type="button" data-date="${service.date}" data-index="${index}">
+          <span class="service-time">${service.time.split(" - ")[0].toUpperCase()}</span>
+          <span class="service-name">${service.principal}</span>
+        </button>
+      `;
+    }
+
+    function renderCalendar() {
+      const weekdays = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+      weekdayGrid.innerHTML = weekdays.map(day => `<div class="calendar-day-header">${day}</div>`).join("");
+      const cells = calendarCells();
+      calendarWrapper.classList.toggle("week-view", state.view === "week");
+      renderFilterStatus();
+
+      calendarGrid.innerHTML = cells.map(cell => {
+        const allServices = byDate.get(cell.date) || [];
+        const services = visibleServicesForDate(cell.date);
+        const hasBirthday = birthdaysByDate.has(cell.date);
+        const filteredOut = state.selectedFilters.size && allServices.length && !services.length;
+        const selected = state.selectedDate === cell.date;
+        return `
+          <div class="calendar-cell ${cell.outside ? "outside-month" : ""} ${hasBirthday ? "has-birthday" : ""} ${filteredOut ? "filtered-out" : ""}">
+            <div class="day-top">
+              <span class="day-number ${selected ? "selected" : ""}">${cell.day}</span>
+              <span class="birthday-markers">${hasBirthday ? icons.cake : ""}</span>
+            </div>
+            <div class="service-list">
+              ${services.map((service, index) => serviceCard(service, index)).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      calendarGrid.querySelectorAll(".service-card").forEach(card => {
+        card.addEventListener("click", event => openDetail(card.dataset.date, Number(card.dataset.index), event.currentTarget));
+      });
+    }
+
+    function detailRow(icon, label, value, iconClass = "", allowEmpty = true) {
+      if (!allowEmpty && (!value || value === "No asignado")) return "";
+      const isUnassigned = !value || value === "No asignado";
+      return `
+        <div class="detail-row">
+          <span class="${iconClass}">${icon}</span>
+          <strong>${label}</strong>
+          <span class="muted ${isUnassigned ? "unassigned" : ""}">${isUnassigned ? "No asignado" : value}</span>
+        </div>
+      `;
+    }
+
+    function musicianRow(role, name) {
+      const isUnassigned = !name || name === "No asignado";
+      return detailRow(instrumentIcon(role, isUnassigned), role, name, "", true);
+    }
+
+    function rememberDetailAnchor(element) {
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      state.detailAnchor = {
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        bottom: rect.bottom
+      };
+    }
+
+    function positionDetailPanel() {
+      const panel = detailMount.querySelector(".service-detail-floating");
+      if (!panel || !state.detailAnchor || window.matchMedia("(max-width: 768px)").matches) return;
+      const gap = 12;
+      const margin = 16;
+      const panelWidth = panel.offsetWidth;
+      const panelHeight = panel.offsetHeight;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      let left = state.detailAnchor.right + gap;
+      if (left + panelWidth > viewportWidth - margin) {
+        left = state.detailAnchor.left - panelWidth - gap;
+      }
+      if (left < margin) {
+        left = Math.min(Math.max(state.detailAnchor.left, margin), viewportWidth - panelWidth - margin);
+      }
+      let top = state.detailAnchor.top;
+      if (top + panelHeight > viewportHeight - margin) {
+        top = viewportHeight - panelHeight - margin;
+      }
+      if (top < margin) top = margin;
+      panel.style.setProperty("--detail-left", `${Math.round(left)}px`);
+      panel.style.setProperty("--detail-top", `${Math.round(top)}px`);
+    }
+
+    function renderDetail() {
+      if (!state.selectedDate) {
+        detailMount.innerHTML = "";
+        calendarWrapper.classList.remove("has-detail");
+        setMobileScrollLock("detail", false);
+        return;
+      }
+      const services = visibleServicesForDate(state.selectedDate);
+      if (!services.length) {
+        detailMount.innerHTML = "";
+        calendarWrapper.classList.remove("has-detail");
+        setMobileScrollLock("detail", false);
+        return;
+      }
+      const active = services[state.selectedServiceIndex] || services[0];
+      const activeIndex = services.indexOf(active);
+      const dateLabel = longDate.format(new Date(`${active.date}T12:00:00`));
+      const uniformName = uniformLabel(active.uniform);
+      detailMount.innerHTML = `
+        <aside class="service-detail-floating" aria-label="Detalle del servicio">
+          <div class="detail-header">
+            <div class="detail-date-line">
+              <span class="${isSunday(active.date) ? 'icon yellow' : 'icon blue'}">${icons.calendar}</span>
+              <span>${dateLabel}</span>
+            </div>
+            <button class="close-detail" type="button" aria-label="Cerrar detalle">${icons.x}</button>
+          </div>
+          <div class="service-time-tabs">
+            ${services.map((service, index) => `<button class="service-time-tab ${index === activeIndex ? "active" : ""}" type="button" data-index="${index}">${service.time.split(" - ")[0].toUpperCase()}</button>`).join("")}
+          </div>
+          <div class="detail-date-line" style="margin-bottom:18px;">${icons.clock || ""}<span>${active.time}</span></div>
+          <section class="principal-block">
+            <span class="principal-icon">${icons.mic}</span>
+            <div>
+              <h2 class="principal-name">${active.principal}</h2>
+              <div class="principal-role">Vocalista Principal</div>
+            </div>
+          </section>
+          <section class="detail-section">
+            <h3 class="detail-section-title">Voces de apoyo</h3>
+            <div class="detail-list">
+              ${active.voices.filter(name => name && name !== "No asignado").map(name => `
+                <div class="detail-row">
+                  <span>${icons.mic2}</span>
+                  <strong>${name}</strong>
+                  <span></span>
+                </div>
+              `).join("")}
+            </div>
+          </section>
+          <section class="detail-section">
+            <h3 class="detail-section-title">Equipo de músicos</h3>
+            <div class="detail-list">
+              ${Object.entries(active.musicians).map(([role, name]) => musicianRow(role, name)).join("")}
+            </div>
+          </section>
+          <section class="uniform-section">
+            <strong>${icons.tag} Uniforme${uniformName ? ` ${uniformName}` : ""}</strong>
+            ${renderUniform(active.uniform)}
+          </section>
+        </aside>
+      `;
+      const panel = detailMount.querySelector(".service-detail-floating");
+      calendarWrapper.classList.add("has-detail");
+      if (panel) {
+        panel.scrollTop = 0;
+        bindContainedScroll(panel);
+      }
+      detailMount.querySelector(".close-detail").addEventListener("click", closeDetail);
+      detailMount.querySelectorAll(".service-time-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          state.selectedServiceIndex = Number(tab.dataset.index);
+          renderDetail();
+        });
+      });
+      positionDetailPanel();
+      setMobileScrollLock("detail", true);
+    }
+
+    function openDetail(date, index, anchorElement = null) {
+      rememberDetailAnchor(anchorElement);
+      state.selectedDate = date;
+      state.selectedServiceIndex = index;
+      renderCalendar();
+      renderDetail();
+    }
+
+    function closeDetail() {
+      const panel = detailMount.querySelector(".service-detail-floating");
+      if (!panel) return;
+      panel.classList.add("is-closing");
+      window.setTimeout(() => {
+        state.selectedDate = "";
+        state.selectedServiceIndex = 0;
+        state.detailAnchor = null;
+        renderCalendar();
+        renderDetail();
+      }, 150);
+    }
+
+    document.addEventListener("pointerdown", event => {
+      const panel = detailMount.querySelector(".service-detail-floating");
+      if (!panel) return;
+      if (panel.contains(event.target)) return;
+      if (event.target.closest(".service-card")) return;
+      closeDetail();
+    });
+
+    window.addEventListener("resize", () => {
+      positionDetailPanel();
+      applyMobileScrollLock();
+    });
+
+    function renderAll(includeFilters = true) {
+      if (includeFilters) {
+        renderFilters(filterContent);
+        renderFilters(mobileFilterContent);
+      } else {
+        renderFilters(filterContent);
+        renderFilters(mobileFilterContent);
+      }
+      renderCalendar();
+      renderDetail();
+    }
+
+    document.querySelectorAll(".view-toggle button").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".view-toggle button").forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        state.view = button.dataset.view || "month";
+        weekSelector.classList.toggle("is-visible", state.view === "week");
+        state.selectedDate = "";
+        state.selectedServiceIndex = 0;
+        renderCalendar();
+        renderDetail();
+      });
+    });
+
+    weekSelector?.addEventListener("change", event => {
+      state.selectedWeek = Number(event.target.value);
+      state.selectedDate = "";
+      state.selectedServiceIndex = 0;
+      renderCalendar();
+      renderDetail();
+    });
+
+    openFilters?.addEventListener("click", openMobileFilters);
+    closeFilters?.addEventListener("click", closeMobileFilters);
+    filterDrawer?.addEventListener("click", event => {
+      if (event.target === filterDrawer) closeMobileFilters();
+    });
+
+    document.querySelectorAll(".calendar-reset").forEach(button => {
+      button.addEventListener("click", resetCalendarFilters);
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
