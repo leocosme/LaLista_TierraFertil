@@ -1166,8 +1166,8 @@
     }
 
     .calendar-cell {
-      height: clamp(60px, calc((100svh - 142px) / 6), 76px);
-      min-height: 60px;
+      height: 84px;
+      min-height: 84px;
       padding: 5px 6px;
     }
 
@@ -1175,6 +1175,7 @@
       padding: 3px 5px;
       border-radius: 7px;
       box-shadow: none;
+      min-height: 26px;
     }
 
     .service-time {
@@ -1183,6 +1184,7 @@
 
     .service-name {
       font-size: 10px;
+      display: block;
     }
 
     .service-role {
@@ -1192,10 +1194,11 @@
     .filter-status {
       position: fixed;
       left: calc(300px + ((100vw - 300px) / 2));
-      bottom: calc(14px + env(safe-area-inset-bottom));
+      bottom: calc(8px + env(safe-area-inset-bottom));
       z-index: 45;
       max-width: min(520px, calc(100vw - 340px));
-      padding: 8px 12px;
+      min-height: 30px;
+      padding: 6px 12px;
       font-size: 12px;
       box-shadow: 0 18px 44px rgba(17, 24, 39, .16);
     }
@@ -1260,8 +1263,8 @@
     }
 
     .calendar-cell {
-      min-height: 72px;
-      height: auto;
+      min-height: 88px;
+      height: 88px;
       padding: 6px;
     }
 
@@ -1288,13 +1291,19 @@
       padding: 3px 4px;
       border-radius: 7px;
       box-shadow: none;
+      min-height: 26px;
     }
 
     .service-time {
       font-size: 9px;
     }
 
-    .service-name,
+    .service-name {
+      display: block;
+      font-size: 10px;
+      line-height: 1.1;
+    }
+
     .service-role {
       display: none;
     }
