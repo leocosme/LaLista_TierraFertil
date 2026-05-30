@@ -1065,6 +1065,126 @@
   }
 
   @media (min-width: 769px) and (max-width: 1180px) and (orientation: landscape) {
+    body {
+      overflow: hidden;
+    }
+
+    .app-shell {
+      height: 100dvh;
+      min-height: 100dvh;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      height: 100dvh;
+      padding: 14px 14px;
+    }
+
+    .brand {
+      margin-bottom: 14px;
+    }
+
+    .menu {
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .menu-item {
+      height: 38px;
+    }
+
+    .main-content {
+      height: 100dvh;
+      padding: 12px 18px;
+      overflow: hidden;
+    }
+
+    .main-header {
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .header-title {
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .header-title-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+    }
+
+    .header-title-icon .icon {
+      width: 23px !important;
+      height: 23px !important;
+    }
+
+    .header-title h1 {
+      font-size: 22px;
+      line-height: 1.05;
+      white-space: nowrap;
+    }
+
+    .header-title p {
+      display: none;
+    }
+
+    .header-actions {
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    .header-button,
+    .week-selector {
+      height: 32px;
+      padding: 0 10px;
+      font-size: 12px;
+      border-radius: 9px;
+    }
+
+    .view-toggle button {
+      height: 28px;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .calendar-wrapper {
+      height: calc(100dvh - 62px);
+      border-radius: 16px;
+    }
+
+    .calendar-day-header {
+      height: 28px;
+      font-size: 11px;
+    }
+
+    .calendar-cell {
+      height: calc((100dvh - 90px) / 6);
+      min-height: 62px;
+      padding: 5px 6px;
+    }
+
+    .service-card {
+      padding: 3px 5px;
+      border-radius: 7px;
+      box-shadow: none;
+    }
+
+    .service-time {
+      font-size: 9px;
+    }
+
+    .service-name {
+      font-size: 10px;
+    }
+
+    .service-role {
+      display: none;
+    }
+
     .filter-status {
       position: fixed;
       left: calc(300px + ((100vw - 300px) / 2));
