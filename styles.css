@@ -1066,18 +1066,20 @@
 
   @media (min-width: 769px) and (max-width: 1180px) and (orientation: landscape) {
     body {
-      overflow: hidden;
+      overflow: auto;
     }
 
     .app-shell {
-      height: 100dvh;
-      min-height: 100dvh;
-      overflow: hidden;
+      min-height: 100svh;
+      height: auto;
+      overflow: visible;
+      padding-top: max(env(safe-area-inset-top), 34px);
     }
 
     .sidebar {
-      height: 100dvh;
+      height: calc(100svh - max(env(safe-area-inset-top), 34px));
       padding: 14px 14px;
+      overflow-y: auto;
     }
 
     .brand {
@@ -1094,9 +1096,10 @@
     }
 
     .main-content {
-      height: 100dvh;
-      padding: 12px 18px;
-      overflow: hidden;
+      height: auto;
+      min-height: 0;
+      padding: 8px 18px 12px;
+      overflow: visible;
     }
 
     .main-header {
@@ -1152,7 +1155,8 @@
     }
 
     .calendar-wrapper {
-      height: calc(100dvh - 62px);
+      height: auto;
+      min-height: 0;
       border-radius: 16px;
     }
 
@@ -1162,8 +1166,8 @@
     }
 
     .calendar-cell {
-      height: calc((100dvh - 90px) / 6);
-      min-height: 62px;
+      height: clamp(60px, calc((100svh - 142px) / 6), 76px);
+      min-height: 60px;
       padding: 5px 6px;
     }
 
