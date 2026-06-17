@@ -163,7 +163,7 @@ body{
 .principal-role{margin-top:2px;color:#374151;font-size:13px;font-weight:500}
 .detail-section{padding:9px 0;border-bottom:1px solid var(--border)}
 .detail-section:last-of-type{border-bottom:none}
-.detail-section-title{margin:0 0 6px;color:#374151;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;}
+.detail-section-title{margin:0 0 6px;color:#374151;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;text-align:center;}
 .detail-list{display:grid;gap:4px}
 .detail-row{display:flex;align-items:center;gap:8px;color:#374151;font-size:12px;}
 .detail-row strong{flex-shrink:0;}
@@ -189,9 +189,8 @@ body{
 .uniform-fallback{color:#374151;font-size:13px;line-height:1.35}
 
 /* ─── MOBILE CLEAR FILTER ─── */
-.mob-clear-filter{display:none;justify-content:center;padding:12px 0 16px;}
-.mob-clear-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--border-strong);background:var(--panel);font-size:13px;font-weight:600;cursor:pointer;color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .16s ease;font-family:inherit;}
-.mob-clear-btn:hover{background:#F3F4F6;border-color:#9CA3AF}
+.fs-clear-btn{display:inline-flex;align-items:center;justify-content:center;margin-left:6px;padding:0;width:20px;height:20px;border:2px solid #EF4444;background:transparent;cursor:pointer;flex-shrink:0;border-radius:50%;transition:background .14s,border-color .14s;vertical-align:middle;}
+.fs-clear-btn:hover{background:rgba(239,68,68,.12)}
 
 /* ─── MOBILE FILTER PANEL ─── */
 .mob-filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:150;}
@@ -213,7 +212,6 @@ body{
   /* Show mobile filter panel (off-screen, for animation) */
   .mob-filter-panel{display:block}
   /* mob-filter-overlay stays hidden until .open class is added — DO NOT set display:block here */
-  .mob-clear-filter.visible{display:flex}
   .day-cell{padding:5px}
   .d-num{font-size:12px}
   .svc-card{padding:2px 5px}
@@ -326,13 +324,6 @@ body{
       <div class="filter-status" id="filterStatus" aria-live="polite"></div>
     </div>
 
-    <!-- MOBILE: borrar filtros -->
-    <div class="mob-clear-filter" id="mobClearFilter">
-      <button class="mob-clear-btn" onclick="clearFilter()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
-        Borrar filtros
-      </button>
-    </div>
   </main>
 </div>
 
@@ -588,10 +579,9 @@ function renderCalendar(){
     if(S.filter){
       const roles=[...S.filterRoles].map(r=>ROLE_LABEL[r]).filter(Boolean);
       const rl=roles.length?` <em>${roles.join(" + ")}</em>`:"";
-      fs.innerHTML=`<strong>${S.filter}</strong>${rl}`;fs.classList.add("on");
+      fs.innerHTML=`<strong>${S.filter}</strong>${rl}<button class="fs-clear-btn" onclick="clearFilter()" title="Borrar filtro"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;fs.classList.add("on");
     } else {fs.innerHTML="";fs.classList.remove("on");}
   }
-  const mcf=$("mobClearFilter");if(mcf)mcf.classList.toggle("visible",!!S.filter);
   if(S.view==="semana")renderWeekView();else renderMonthView();
 }
 
