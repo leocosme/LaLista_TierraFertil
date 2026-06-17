@@ -63,6 +63,9 @@ body{
 .min-item.active .min-count{background:#DBEAFE;color:var(--blue)}
 .legend-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--muted)}
 .leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+/* Clear icon inside filter */
+.filter-clear-icon{flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--muted);cursor:pointer;transition:all .14s ease;font-family:inherit;}
+.filter-clear-icon:hover{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
 
 /* ─── CALENDAR SECTION ─── */
 .cal-section{overflow:hidden;padding:14px 22px 0;display:flex;flex-direction:column;}
@@ -73,7 +76,8 @@ body{
 .cal-title-icon{flex-shrink:0;color:#111827}
 .topbar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .today-btn{height:32px;padding:0 14px;border:1px solid var(--border);background:var(--panel);border-radius:8px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .14s ease;white-space:nowrap;font-family:inherit;}
-.today-btn:hover{background:#F9FAFB;border-color:var(--border-strong)}
+.today-btn:hover:not(:disabled){background:#F9FAFB;border-color:var(--border-strong)}
+.today-btn:disabled{opacity:.35;cursor:not-allowed}
 .nav-pair{display:flex;gap:3px}
 .nav-btn{width:30px;height:30px;border:1px solid var(--border);background:var(--panel);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:all .14s ease;font-family:inherit;}
 .nav-btn:hover:not(:disabled){background:#F9FAFB;border-color:var(--border-strong);color:var(--text)}
@@ -140,7 +144,7 @@ body{
 .week-body .svc-name{font-size:11.5px}
 
 /* ─── FLOATING DETAIL ─── */
-.service-detail-floating{position:fixed;left:var(--detail-left,50%);top:var(--detail-top,96px);width:min(400px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:16px;z-index:20;animation:floatIn .22s ease-out;scrollbar-width:thin;scrollbar-color:var(--border) transparent;font-family:'Plus Jakarta Sans',sans-serif;}
+.service-detail-floating{position:fixed;left:var(--detail-left,50%);top:var(--detail-top,96px);width:min(400px,calc(100vw - 32px));height:auto;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:16px;z-index:20;animation:floatIn .22s ease-out;scrollbar-width:thin;scrollbar-color:var(--border) transparent;font-family:'Plus Jakarta Sans',sans-serif;}
 .service-detail-floating::-webkit-scrollbar{width:4px}
 .service-detail-floating::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .service-detail-floating.is-closing{animation:floatOut .16s ease-in forwards}
@@ -161,7 +165,9 @@ body{
 .detail-section:last-of-type{border-bottom:none}
 .detail-section-title{margin:0 0 6px;color:#374151;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;}
 .detail-list{display:grid;gap:4px}
-.detail-row{display:grid;grid-template-columns:22px 1fr auto;gap:7px;align-items:center;color:#374151;font-size:12px;}
+.detail-row{display:flex;align-items:center;gap:8px;color:#374151;font-size:12px;}
+.detail-row strong{flex-shrink:0;}
+.detail-row .detail-row-val{margin-left:auto;text-align:right;}
 .detail-row strong{color:var(--text);font-size:12px;font-weight:600}
 .detail-row .na{color:var(--red);font-weight:600;font-size:11.5px;font-style:italic}
 
@@ -182,21 +188,16 @@ body{
 .uniform-piece small{display:block;color:var(--muted);font-size:10px;font-weight:500;line-height:1.2}
 .uniform-fallback{color:#374151;font-size:13px;line-height:1.35}
 
-/* ─── FILTER CLEAR ICON (sidebar) ─── */
-.filter-clear-icon{flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--muted);cursor:pointer;transition:all .14s ease;font-family:inherit;}
-.filter-clear-icon:hover{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
-
 /* ─── MOBILE CLEAR FILTER ─── */
 .mob-clear-filter{display:none;justify-content:center;padding:12px 0 16px;}
-.mob-clear-filter.visible{display:flex}
 .mob-clear-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--border-strong);background:var(--panel);font-size:13px;font-weight:600;cursor:pointer;color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .16s ease;font-family:inherit;}
 .mob-clear-btn:hover{background:#F3F4F6;border-color:#9CA3AF}
 
-/* ─── MOBILE FILTER ─── */
+/* ─── MOBILE FILTER PANEL ─── */
 .mob-filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:150;}
+.mob-filter-overlay.open{display:block}
 .mob-filter-panel{display:none;position:fixed;inset:auto 0 0 0;max-height:86vh;transform:translateY(110%);transition:transform .22s ease;background:var(--panel);border-radius:24px 24px 0 0;box-shadow:var(--shadow);padding:22px 18px 40px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;z-index:151;}
 .mob-filter-panel.open{transform:translateY(0)}
-.mob-filter-overlay.open{display:block}
 .mfp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .mfp-title{font-size:16px;font-weight:700}
 .icon-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:background .12s;border:none;background:transparent;font-family:inherit;}
@@ -209,9 +210,10 @@ body{
   .cal-section{padding:10px 10px 0}
   .cal-wrapper{height:auto}
   .hdr-filter-btn{display:flex}
-  .mob-clear-filter.visible{display:flex}
+  /* Show mobile filter panel (off-screen, for animation) */
   .mob-filter-panel{display:block}
-  .mob-filter-overlay{display:block}
+  /* mob-filter-overlay stays hidden until .open class is added — DO NOT set display:block here */
+  .mob-clear-filter.visible{display:flex}
   .cal-grid{grid-auto-rows:80px}
   .day-cell{height:80px;min-height:80px;padding:5px}
   .d-num{font-size:12px}
@@ -219,9 +221,31 @@ body{
   .cal-main-title{font-size:14px;gap:6px}
   .month-picker{font-size:13px;padding:4px 7px}
 }
+/* ─── DETAIL OVERLAY (mobile) ─── */
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(8,8,14,.78);z-index:19;opacity:0;pointer-events:none;transition:opacity .22s ease;}
 @media(max-width:768px){
-  .service-detail-floating{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:min(88vh,calc(100vh - 18px));max-height:calc(100vh - 18px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(18px + env(safe-area-inset-bottom));border-radius:24px 24px 0 0;animation:bottomSheetIn .22s ease-out;}
-  @keyframes bottomSheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  .service-detail-floating{
+    position:fixed!important;
+    left:max(16px,calc(50% - 160px))!important;
+    right:max(16px,calc(50% - 160px))!important;
+    top:50%!important;
+    bottom:auto!important;
+    width:auto!important;
+    height:auto!important;
+    max-height:80vh!important;
+    transform:translateY(-50%)!important;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:12px;
+    border-radius:20px!important;
+    animation:cardIn .22s ease-out!important;
+  }
+  .service-detail-floating.is-closing{animation:cardOut .16s ease-in forwards!important}
+  @keyframes cardIn{from{opacity:0;transform:translateY(calc(-50% + 28px))}to{opacity:1;transform:translateY(-50%)}}
+  @keyframes cardOut{from{opacity:1;transform:translateY(-50%)}to{opacity:0;transform:translateY(calc(-50% + 16px))}}
+  .detail-overlay{display:block;}
+  .detail-overlay.on{opacity:1;pointer-events:all;}
 }
 @media(max-width:540px){
   .cal-topbar{gap:6px}
@@ -268,9 +292,11 @@ body{
   <aside class="sidebar"><div id="deskFilterBody"></div></aside>
 
   <main class="cal-section">
-    <!-- TOPBAR: title left, controls right -->
     <div class="cal-topbar">
-      <h2 class="cal-main-title"><svg class="cal-title-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>La Lista · Programación Mensual</h2>
+      <h2 class="cal-main-title">
+        <svg class="cal-title-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        La Lista · Programación Mensual
+      </h2>
       <div class="topbar-right">
         <button class="today-btn" onclick="goToday()">Hoy</button>
         <div class="nav-pair">
@@ -293,12 +319,12 @@ body{
       </div>
     </div>
 
-    <!-- CAL WRAPPER -->
     <div class="cal-wrapper" id="calWrapper">
       <div class="day-hdr-grid" id="dayHdrGrid"></div>
       <div class="cal-grid" id="calGrid"></div>
       <div class="filter-status" id="filterStatus" aria-live="polite"></div>
     </div>
+
     <!-- MOBILE: borrar filtros -->
     <div class="mob-clear-filter" id="mobClearFilter">
       <button class="mob-clear-btn" onclick="clearFilter()">
@@ -309,6 +335,7 @@ body{
   </main>
 </div>
 
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
 <div id="detailMount"></div>
 
 <script>
@@ -419,7 +446,6 @@ const INST_KEYS=["bajo","bateria","piano","guitarra","saxofon","percusiones"];
 const INST_LABELS={bajo:"Bajo",bateria:"Batería",piano:"Piano / Teclado",guitarra:"Guitarra",saxofon:"Saxofón",percusiones:"Percusiones"};
 
 /* ─── STATE ─── */
-// filterRoles: Set of "vocalista"|"voz"|"musico" — same person can have multiple roles active
 const S={month:"2026-07",selDate:null,svcIdx:0,filter:null,filterRoles:new Set(),filterSearch:"",detailAnchor:null,view:"mes",weekStart:null};
 const $=id=>document.getElementById(id);
 const NA=v=>!v||v==="No asignado";
@@ -463,6 +489,7 @@ function initials(n){const p=n.split(" ");return(p[0][0]+(p[1]?p[1][0]:"")).toUp
 /* ─── FILTER ─── */
 function filterHTML(){
   const q=S.filterSearch.toLowerCase();
+  const clearBtn=S.filter?`<button class="filter-clear-icon" onclick="clearFilter()" title="Borrar filtro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg></button>`:"";
   function minItem(name,role){
     if(q&&!name.toLowerCase().includes(q))return "";
     const p=pal(name);const cnt=countSvcsRole(name,role);const act=S.filter===name&&S.filterRoles.has(role);
@@ -473,7 +500,6 @@ function filterHTML(){
     </div>`;
   }
   function grp(label,names,role){const h=names.map(n=>minItem(n,role)).join("");return h?`<div class="sidebar-sec"><p class="sec-label">${label}</p><div class="min-list">${h}</div></div>`:""}
-  const clearBtn=S.filter?`<button class="filter-clear-icon" onclick="clearFilter()" title="Borrar filtro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg></button>`:"";
   return `
   <div class="sidebar-sec" style="margin-bottom:8px">
     <div style="display:flex;align-items:center;gap:6px">
@@ -505,11 +531,9 @@ function onSearch(v){
 }
 function setFilter(name,role){
   if(S.filter===name){
-    // Same person: toggle this role
     if(S.filterRoles.has(role))S.filterRoles.delete(role);else S.filterRoles.add(role);
     if(S.filterRoles.size===0)S.filter=null;
   } else {
-    // Different person: reset to just this one role
     S.filter=name;S.filterRoles=new Set(role?[role]:[]);
   }
   closeMobFilter();renderAll();
@@ -519,7 +543,6 @@ function setFilter(name,role){
 function updateTopbar(){
   const hoyBtn=document.querySelector(".today-btn");
   if(hoyBtn){const todayAvail=AVAILABLE.includes(todayKey().slice(0,7));hoyBtn.disabled=!todayAvail;hoyBtn.title=todayAvail?"":"El día de hoy no pertenece a los datos cargados";}
-
   const [yr,mo]=S.month.split("-").map(Number);
   const mName=MONTHS_ES[mo-1];
   if(S.view==="semana"&&S.weekStart){
@@ -559,7 +582,6 @@ const ROLE_LABEL={vocalista:"Vocalista Principal",voz:"Voces de Apoyo",musico:"M
 
 function renderCalendar(){
   updateTopbar();
-  // Filter status pill
   const fs=$("filterStatus");
   if(fs){
     if(S.filter){
@@ -600,7 +622,7 @@ function renderMonthView(){
 }
 
 function renderWeekView(){
-  if(!S.weekStart)S.weekStart=getWeekStart(todayKey());
+  if(!S.weekStart)S.weekStart=getWeekStart(S.month+"-01");
   $("dayHdrGrid").style.display="none";$("dayHdrGrid").innerHTML="";
   const todayStr=todayKey();
   let h="";
@@ -644,7 +666,7 @@ function renderDetail(){
   const uLabel=uniformLabel(sv.uniforme);
   const voices=sv.voces.filter(v=>v&&v!=="No asignado");
   const hasMusicos=INST_KEYS.some(k=>!NA(sv[k]));
-  const instRows=INST_KEYS.map(k=>{const val=sv[k];const na=NA(val);return `<div class="detail-row"><span>${instIcon(k)}</span><strong>${INST_LABELS[k]}</strong><span class="${na?"na":""}">${na?"No asignado":val}</span></div>`;}).join("");
+  const instRows=INST_KEYS.map(k=>{const val=sv[k];const na=NA(val);return `<div class="detail-row"><span>${instIcon(k)}</span><strong>${INST_LABELS[k]}</strong><span class="detail-row-val${na?" na":""}">${na?"No asignado":val}</span></div>`;}).join("");
   detailMount.innerHTML=`
     <aside class="service-detail-floating" aria-label="Detalle del servicio">
       <div class="detail-header-row">
@@ -659,6 +681,7 @@ function renderDetail(){
       <div class="uniform-section"><strong>${IC.tag} Uniforme${uLabel?" – "+uLabel:""}</strong>${renderUniform(sv.uniforme)}</div>
     </aside>`;
   calWrapper.classList.add("has-detail");
+  $("detailOverlay").classList.add("on");
   const panel=detailMount.querySelector(".service-detail-floating");if(panel)panel.scrollTop=0;
   detailMount.querySelector(".close-detail").addEventListener("click",()=>closeDetail());
   detailMount.querySelectorAll(".time-tab").forEach(tab=>{tab.addEventListener("click",()=>{S.svcIdx=Number(tab.dataset.i);renderDetail();});});
@@ -667,6 +690,7 @@ function renderDetail(){
 
 function openDetail(dk,idx,anchor=null){rememberAnchor(anchor);S.selDate=dk;S.svcIdx=idx;renderCalendar();renderDetail();}
 function closeDetail(instant=false){
+  $("detailOverlay").classList.remove("on");
   const panel=detailMount.querySelector(".service-detail-floating");
   if(!panel){calWrapper.classList.remove("has-detail");return;}
   if(instant){detailMount.innerHTML="";calWrapper.classList.remove("has-detail");return;}
