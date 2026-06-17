@@ -144,7 +144,7 @@ body{
 .week-body .svc-name{font-size:11.5px}
 
 /* ─── FLOATING DETAIL ─── */
-.service-detail-floating{position:fixed;left:var(--detail-left,50%);top:var(--detail-top,96px);width:min(400px,calc(100vw - 32px));height:auto;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:16px;z-index:20;animation:floatIn .22s ease-out;scrollbar-width:thin;scrollbar-color:var(--border) transparent;font-family:'Plus Jakarta Sans',sans-serif;}
+.service-detail-floating{position:fixed;left:var(--detail-left,50%);top:var(--detail-top,96px);width:min(400px,calc(100vw - 32px));height:auto;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:16px;z-index:160;animation:floatIn .22s ease-out;scrollbar-width:thin;scrollbar-color:var(--border) transparent;font-family:'Plus Jakarta Sans',sans-serif;}
 .service-detail-floating::-webkit-scrollbar{width:4px}
 .service-detail-floating::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .service-detail-floating.is-closing{animation:floatOut .16s ease-in forwards}
@@ -219,7 +219,7 @@ body{
   .month-picker{font-size:13px;padding:4px 7px}
 }
 /* ─── DETAIL OVERLAY (mobile) ─── */
-.detail-overlay{display:none;position:fixed;inset:0;background:rgba(8,8,14,.78);z-index:19;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(8,8,14,.78);z-index:150;opacity:0;pointer-events:none;transition:opacity .22s ease;}
 @media(max-width:768px){
   .service-detail-floating{
     position:fixed!important;
