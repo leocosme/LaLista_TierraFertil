@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tierra Fértil · Programación Ministerial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button,input{font:inherit;color:inherit}
+:root{
+  --bg:#FAFAFA;--panel:#FFFFFF;--border:#E5E7EB;--border-strong:#D1D5DB;
+  --text:#111827;--muted:#6B7280;--muted-2:#9CA3AF;
+  --blue:#2563EB;--blue-hover:#1D4ED8;
+  --yellow:#FACC15;--yellow-hover:#EAB308;
+  --sat-green:#4ADE80;--sat-green-hover:#22C55E;
+  --red:#EF4444;
+  --shadow:0 24px 70px rgba(0,0,0,.14);
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;
+  background:radial-gradient(circle at 86% 8%,rgba(255,255,255,.9),rgba(255,255,255,0) 360px),linear-gradient(180deg,#F8FAFC 0%,#EEF2F7 100%);
+  color:var(--text);font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── HEADER ─── */
+.app-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 1px 2px rgba(0,0,0,.05);}
+.logo-mark{width:34px;height:34px;flex-shrink:0;background:linear-gradient(135deg,#EF4444 0%,#111827 100%);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.app-name{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.app-tagline{font-size:10px;color:var(--muted);font-weight:400;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
+.hdr-spacer{flex:1}
+.hdr-filter-btn{display:none;align-items:center;gap:6px;padding:7px 12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;transition:all .18s ease;}
+.hdr-filter-btn:hover{background:#F9FAFB;border-color:var(--border-strong)}
+.hdr-filter-btn.has-filter{background:#EFF6FF;border-color:#BFDBFE;color:var(--blue)}
+
+/* ─── LAYOUT ─── */
+.layout{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 58px);overflow:hidden;}
+
+/* ─── SIDEBAR ─── */
+.sidebar{background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;padding:22px 16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sec-label{margin:0 0 8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#111827;}
+.sidebar-sec{margin-bottom:20px}
+.search-wrap{position:relative;margin-bottom:10px}
+.search-wrap .s-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.search-wrap input{width:100%;height:36px;border:1px solid var(--border);border-radius:10px;padding:0 12px 0 34px;background:var(--panel);color:var(--text);font-size:13px;outline:none;transition:border-color .18s ease;}
+.search-wrap input:focus{border-color:var(--border-strong);box-shadow:0 0 0 3px rgba(17,24,39,.05)}
+.search-wrap input::placeholder{color:var(--muted-2)}
+.min-list{display:flex;flex-direction:column;gap:1px;overflow-y:auto;scrollbar-width:thin}
+.min-item{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:10px;cursor:pointer;transition:background .14s ease;font-size:13px;font-weight:500;}
+.min-item:hover{background:#F3F4F6}
+.min-item.active{background:#EFF6FF;border:1px solid #BFDBFE;font-weight:600}
+.avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.min-name{flex:1;line-height:1.2;color:#374151}
+.min-item.active .min-name{color:var(--blue)}
+.min-count{font-size:10px;font-weight:600;background:var(--bg);border-radius:999px;padding:1px 6px;color:var(--muted);}
+.min-item.active .min-count{background:#DBEAFE;color:var(--blue)}
+.legend-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* ─── CALENDAR SECTION ─── */
+.cal-section{overflow:hidden;padding:14px 22px 0;display:flex;flex-direction:column;}
+
+/* ─── TOPBAR ─── */
+.cal-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-shrink:0;}
+.cal-main-title{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.03em;white-space:nowrap;}
+.cal-title-icon{flex-shrink:0;color:#111827}
+.topbar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.today-btn{height:32px;padding:0 14px;border:1px solid var(--border);background:var(--panel);border-radius:8px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .14s ease;white-space:nowrap;font-family:inherit;}
+.today-btn:hover{background:#F9FAFB;border-color:var(--border-strong)}
+.nav-pair{display:flex;gap:3px}
+.nav-btn{width:30px;height:30px;border:1px solid var(--border);background:var(--panel);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:all .14s ease;font-family:inherit;}
+.nav-btn:hover:not(:disabled){background:#F9FAFB;border-color:var(--border-strong);color:var(--text)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.month-picker{position:relative;display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;color:var(--text);transition:background .14s ease;user-select:none;}
+.month-picker:hover{background:#F3F4F6}
+.mp-caret{color:var(--muted);transition:transform .16s ease;flex-shrink:0}
+.month-picker.open .mp-caret{transform:rotate(180deg)}
+.month-drop{position:absolute;top:calc(100% + 6px);right:0;z-index:300;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.13);padding:6px;min-width:160px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .14s ease,transform .14s ease;}
+.month-drop.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.md-item{padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:background .12s ease;}
+.md-item:hover{background:#F3F4F6}
+.md-item.cur{color:var(--blue);font-weight:700}
+.view-toggle{display:flex;background:#F3F4F6;border-radius:8px;padding:2px;gap:2px;}
+.vt-btn{height:28px;padding:0 12px;border:0;border-radius:6px;background:transparent;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .14s ease;font-family:inherit;}
+.vt-btn.active{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.09);}
+
+/* ─── FILTER STATUS PILL ─── */
+.filter-status{position:absolute;left:50%;bottom:14px;z-index:14;display:inline-flex;align-items:center;justify-content:center;gap:8px;max-width:min(560px,calc(100% - 32px));min-height:36px;padding:8px 18px;border:1px solid rgba(229,231,235,.9);border-radius:999px;background:rgba(255,255,255,.92);color:var(--muted);box-shadow:0 14px 34px rgba(17,24,39,.12);backdrop-filter:blur(14px) saturate(1.12);-webkit-backdrop-filter:blur(14px) saturate(1.12);font-size:13px;line-height:1.2;white-space:nowrap;opacity:0;pointer-events:none;transform:translate(-50%,10px);transition:opacity .2s ease,transform .2s ease;}
+.filter-status.on{opacity:1;transform:translate(-50%,0)}
+.filter-status strong{color:var(--text);font-weight:700}
+.filter-status em{color:var(--blue);font-style:normal;font-weight:600}
+
+/* ─── CAL WRAPPER ─── */
+.cal-wrapper{position:relative;height:calc(100vh - 148px);background:var(--panel);border:1px solid var(--border);border-radius:20px;overflow:hidden;}
+.cal-wrapper::after{content:"";position:absolute;inset:0;z-index:15;pointer-events:none;opacity:0;background:rgba(255,255,255,.62);backdrop-filter:blur(5px) saturate(1.08);-webkit-backdrop-filter:blur(5px) saturate(1.08);transition:opacity .2s ease;}
+.cal-wrapper.has-detail::after{opacity:1}
+
+/* ─── MONTH VIEW ─── */
+.day-hdr-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.day-hdr{height:34px;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.04em;border-bottom:1px solid var(--border);background:var(--panel);}
+.day-cell{position:relative;min-height:0;height:calc((100vh - 184px) / 5);padding:7px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--panel);overflow:hidden;transition:background .14s ease;}
+.day-cell:nth-child(7n){border-right:0}
+.day-cell.outside{opacity:.3}
+.day-cell.today .d-num{background:var(--text);color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;}
+.day-cell.has-events{cursor:pointer}
+.day-cell.has-events:hover{background:#F3F4F6}
+.d-num{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.d-chips{display:grid;gap:3px;margin-top:2px}
+
+/* ─── WEEK VIEW ─── */
+.week-grid-inner{display:grid;grid-template-columns:repeat(7,1fr);height:100%}
+.week-col{display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden;}
+.week-col:last-child{border-right:0}
+.week-hdr{text-align:center;padding:9px 4px 7px;border-bottom:1px solid var(--border);background:var(--panel);flex-shrink:0;}
+.wh-day{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.wh-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:15px;font-weight:700;color:var(--text);margin-top:3px;}
+.wh-num.today{background:var(--text);color:#fff}
+.week-body{flex:1;padding:5px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.week-body.has-svc{cursor:pointer}
+.week-body.has-svc:hover{background:#F3F4F6}
+
+/* ─── SERVICE CARDS ─── */
+.svc-card{border:0;width:100%;text-align:left;border-radius:9px;padding:3px 6px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;box-shadow:0 4px 12px rgba(0,0,0,.08);overflow:hidden;font-family:inherit;}
+.svc-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.svc-card.wed{background:var(--blue);color:#fff}.svc-card.wed:hover{background:var(--blue-hover)}
+.svc-card.sun{background:var(--yellow);color:var(--text)}.svc-card.sun:hover{background:var(--yellow-hover)}
+.svc-card.sat{background:var(--sat-green);color:#064E3B}.svc-card.sat:hover{background:var(--sat-green-hover)}
+.svc-time{display:block;font-size:7.5px;font-weight:600;line-height:1.1;margin-bottom:1px;opacity:.85}
+.svc-name{display:block;font-size:9.5px;font-weight:700;line-height:1.1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.week-body .svc-card{padding:5px 8px;border-radius:10px;margin-bottom:2px}
+.week-body .svc-time{font-size:9px}
+.week-body .svc-name{font-size:11.5px}
+
+/* ─── FLOATING DETAIL ─── */
+.service-detail-floating{position:fixed;left:var(--detail-left,50%);top:var(--detail-top,96px);width:min(400px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:16px;z-index:20;animation:floatIn .22s ease-out;scrollbar-width:thin;scrollbar-color:var(--border) transparent;font-family:'Plus Jakarta Sans',sans-serif;}
+.service-detail-floating::-webkit-scrollbar{width:4px}
+.service-detail-floating::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.service-detail-floating.is-closing{animation:floatOut .16s ease-in forwards}
+@keyframes floatIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes floatOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(8px) scale(.98)}}
+.detail-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:8px;}
+.detail-date-line{display:flex;align-items:center;gap:8px;color:#374151;font-size:13px;}
+.close-detail{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:#374151;cursor:pointer;transition:background .14s ease;flex-shrink:0;font-family:inherit;}
+.close-detail:hover{background:#F3F4F6}
+.time-tabs{display:flex;gap:6px;margin:8px 0 12px;flex-wrap:wrap}
+.time-tab{height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--panel);font-size:13px;color:#374151;cursor:pointer;transition:all .14s ease;font-family:inherit;}
+.time-tab:hover{background:#F9FAFB;border-color:var(--border-strong)}
+.time-tab.active{background:var(--text);color:#fff;border-color:var(--text)}
+.principal-block{display:grid;grid-template-columns:46px 1fr;gap:10px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.principal-name{margin:0;color:var(--text);font-size:21px;line-height:1.15;font-weight:800}
+.principal-role{margin-top:2px;color:#374151;font-size:13px;font-weight:500}
+.detail-section{padding:9px 0;border-bottom:1px solid var(--border)}
+.detail-section:last-of-type{border-bottom:none}
+.detail-section-title{margin:0 0 6px;color:#374151;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;}
+.detail-list{display:grid;gap:4px}
+.detail-row{display:grid;grid-template-columns:22px 1fr auto;gap:7px;align-items:center;color:#374151;font-size:12px;}
+.detail-row strong{color:var(--text);font-size:12px;font-weight:600}
+.detail-row .na{color:var(--red);font-weight:600;font-size:11.5px;font-style:italic}
+
+/* ─── UNIFORM ─── */
+.uniform-section{margin-top:10px;padding:10px;border-radius:16px;background:#F9FAFB;border:1px solid var(--border);color:#374151;font-size:13px;line-height:1.35;}
+.uniform-section strong{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--text);font-size:13px;}
+.uniform-visual{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px;}
+.uniform-visual.uniform-gala{grid-template-columns:repeat(2,minmax(0,1fr))}
+.uniform-piece{--piece-fill:#FFFFFF;--piece-stroke:#6B7280;min-height:46px;display:flex;align-items:center;gap:9px;padding:7px;border:1px solid var(--border);border-radius:12px;background:#fff;}
+.uniform-piece svg{width:21px;height:21px;stroke:var(--piece-stroke);stroke-width:1.8;fill:var(--piece-fill);stroke-linecap:round;stroke-linejoin:round;flex:none;}
+.uniform-piece .uniform-shape{fill:var(--piece-fill);stroke:var(--piece-stroke)}
+.uniform-piece .uniform-detail{fill:none;stroke:var(--piece-stroke);opacity:.58}
+.uniform-piece .uniform-dot{fill:rgba(255,255,255,.62);stroke:none}
+.uniform-piece .uniform-tie{fill:var(--piece-accent,#111827);stroke:var(--piece-accent,#111827)}
+.uniform-piece.icon-only{min-height:54px;justify-content:center;padding:8px}
+.uniform-piece.icon-only svg{width:34px;height:34px}
+.uniform-piece span{display:block;color:var(--text);font-size:11px;font-weight:700;line-height:1.2}
+.uniform-piece small{display:block;color:var(--muted);font-size:10px;font-weight:500;line-height:1.2}
+.uniform-fallback{color:#374151;font-size:13px;line-height:1.35}
+
+/* ─── FILTER CLEAR ICON (sidebar) ─── */
+.filter-clear-icon{flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--muted);cursor:pointer;transition:all .14s ease;font-family:inherit;}
+.filter-clear-icon:hover{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
+
+/* ─── MOBILE CLEAR FILTER ─── */
+.mob-clear-filter{display:none;justify-content:center;padding:12px 0 16px;}
+.mob-clear-filter.visible{display:flex}
+.mob-clear-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--border-strong);background:var(--panel);font-size:13px;font-weight:600;cursor:pointer;color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .16s ease;font-family:inherit;}
+.mob-clear-btn:hover{background:#F3F4F6;border-color:#9CA3AF}
+
+/* ─── MOBILE FILTER ─── */
+.mob-filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:150;}
+.mob-filter-panel{display:none;position:fixed;inset:auto 0 0 0;max-height:86vh;transform:translateY(110%);transition:transform .22s ease;background:var(--panel);border-radius:24px 24px 0 0;box-shadow:var(--shadow);padding:22px 18px 40px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;z-index:151;}
+.mob-filter-panel.open{transform:translateY(0)}
+.mob-filter-overlay.open{display:block}
+.mfp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mfp-title{font-size:16px;font-weight:700}
+.icon-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:background .12s;border:none;background:transparent;font-family:inherit;}
+.icon-btn:hover{background:#F3F4F6}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .layout{display:block;height:auto;overflow:visible}
+  .sidebar{display:none}
+  .cal-section{padding:10px 10px 0}
+  .cal-wrapper{height:auto}
+  .hdr-filter-btn{display:flex}
+  .mob-clear-filter.visible{display:flex}
+  .mob-filter-panel{display:block}
+  .mob-filter-overlay{display:block}
+  .cal-grid{grid-auto-rows:80px}
+  .day-cell{height:80px;min-height:80px;padding:5px}
+  .d-num{font-size:12px}
+  .svc-card{padding:2px 5px}
+  .cal-main-title{font-size:14px;gap:6px}
+  .month-picker{font-size:13px;padding:4px 7px}
+}
+@media(max-width:768px){
+  .service-detail-floating{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:min(88vh,calc(100vh - 18px));max-height:calc(100vh - 18px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(18px + env(safe-area-inset-bottom));border-radius:24px 24px 0 0;animation:bottomSheetIn .22s ease-out;}
+  @keyframes bottomSheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+}
+@media(max-width:540px){
+  .cal-topbar{gap:6px}
+  .today-btn{padding:0 10px;font-size:12px;height:28px}
+  .vt-btn{padding:0 8px;font-size:12px}
+  .cal-main-title{font-size:11px;gap:4px}
+  .month-picker{font-size:12px;padding:4px 6px}
+}
+@media(max-width:480px){
+  .cal-grid{grid-auto-rows:64px}
+  .day-cell{height:64px;min-height:64px;padding:4px 3px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="logo-mark">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+  </div>
+  <div><div class="app-name">Tierra Fértil</div><div class="app-tagline">Ministerio de Alabanza Lluvias de Bendiciones</div></div>
+  <div class="hdr-spacer"></div>
+  <button class="hdr-filter-btn" id="hdrFilterBtn" onclick="openMobFilter()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    Ministro
+  </button>
+</header>
+
+<!-- MOBILE FILTER -->
+<div class="mob-filter-overlay" id="mobFilterOverlay" onclick="closeMobFilter()"></div>
+<div class="mob-filter-panel" id="mobFilterPanel">
+  <div class="mfp-header">
+    <span class="mfp-title">Filtrar por ministro</span>
+    <button class="icon-btn" onclick="closeMobFilter()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div id="mobFilterBody"></div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <aside class="sidebar"><div id="deskFilterBody"></div></aside>
+
+  <main class="cal-section">
+    <!-- TOPBAR: title left, controls right -->
+    <div class="cal-topbar">
+      <h2 class="cal-main-title"><svg class="cal-title-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>La Lista · Programación Mensual</h2>
+      <div class="topbar-right">
+        <button class="today-btn" onclick="goToday()">Hoy</button>
+        <div class="nav-pair">
+          <button class="nav-btn" id="prevBtn" onclick="navPrev()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="nav-btn" id="nextBtn" onclick="navNext()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <div class="month-picker" id="monthPickerEl" onclick="toggleMonthDrop()">
+          <span id="monthPickerLabel">Julio 2026</span>
+          <svg class="mp-caret" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="month-drop" id="monthDrop"></div>
+        </div>
+        <div class="view-toggle">
+          <button class="vt-btn active" id="vt-mes" onclick="setView('mes')">Mes</button>
+          <button class="vt-btn" id="vt-sem" onclick="setView('semana')">Semana</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAL WRAPPER -->
+    <div class="cal-wrapper" id="calWrapper">
+      <div class="day-hdr-grid" id="dayHdrGrid"></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="filter-status" id="filterStatus" aria-live="polite"></div>
+    </div>
+    <!-- MOBILE: borrar filtros -->
+    <div class="mob-clear-filter" id="mobClearFilter">
+      <button class="mob-clear-btn" onclick="clearFilter()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+        Borrar filtros
+      </button>
+    </div>
+  </main>
+</div>
+
+<div id="detailMount"></div>
+
+<script>
+/* ─── ICONS ─── */
+const IC = {
+  cal:`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>`,
+  mic:`<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#2563EB" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><path d="M12 19v3"></path></svg>`,
+  mic2:`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9v3a3 3 0 0 0 6 0V9"></path><path d="M12 2a3 3 0 0 0-3 3v4h6V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><path d="M12 19v3"></path></svg>`,
+  clock:`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>`,
+  tag:`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"></path><circle cx="7" cy="7" r="1"></circle></svg>`,
+  x:`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"></path></svg>`,
+  search:`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>`,
+  filter:`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>`,
+  shirt:`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 4 4 6l-2 5 4 2 2-3v10h8V10l2 3 4-2-2-5-4-2-2 3h-4Z"></path></svg>`,
+  blouse:`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 4 5 6 3 12l4 1 1-3 1 10h6l1-10 1 3 4-1-2-6-3-2-4 4Z"></path></svg>`,
+  pants:`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 3h8l2 18h-5l-1-10-1 10H6Z"></path><path class="uniform-detail" d="M12 4v7"></path></svg>`,
+  skirt:`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 4h8l3 17H5Z"></path><path class="uniform-detail" d="M9 4v17M15 4v17"></path></svg>`,
+  galaDress:`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M8 2.8 11 9h2l3-6.2 4 1.4-1.7 4.5-2.2.9L21 22H3l4.9-12.4-2.2-.9L4 4.2Z"></path><path class="uniform-detail" d="M6.5 10h11M5 21h14"></path></svg>`,
+  galaShirt:`<svg viewBox="0 0 24 24" aria-hidden="true"><path class="uniform-shape" d="M7.5 4.2h9L20 8.5c.8 1.5 1.2 4.6 1 9.2C18.5 19.2 15.5 20 12 20s-6.5-.8-9-2.3c-.2-4.6.2-7.7 1-9.2Z"></path><path class="uniform-detail" d="M8.2 4.7 12 18.5l3.8-13.8"></path><path class="uniform-tie" d="M10.7 6.2h2.6L12 8.1l1.6 6.2L12 18.5l-1.6-4.2L12 8.1Z"></path></svg>`,
+};
+
+const instIcon=role=>{
+  const k=role.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const IP=`width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+  if(k.includes("bajo"))    return `<svg ${IP} style="color:#7C3AED"><path d="M15.5 3.5 20.5 8.5"/><path d="M18 6 9.5 14.5"/><path d="M7.8 10.8c-2.8.7-4.5 2.9-3.9 5.6.7 3 3.7 4.8 6.6 4 2.2-.6 3.3-2.2 3-4-.2-1.1-.9-1.8-2-2.2"/><path d="M8.1 16.2h.01"/><path d="M11 13 14 16"/><path d="M19.5 4.5h1.5v1.5"/></svg>`;
+  if(k.includes("bateria")) return `<svg ${IP} style="color:#DC2626"><circle cx="12" cy="15" r="4"/><path d="M8 15v3c0 1.5 1.8 2.5 4 2.5s4-1 4-2.5v-3"/><path d="M5 10h5M14 10h5M7.5 10v3M16.5 10v3M6 5l4 4M18 5l-4 4"/></svg>`;
+  if(k.includes("piano")||k.includes("teclado")) return `<svg ${IP} style="color:#2563EB"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 6v12M11 6v12M15 6v12M19 6v12M9 6v6M13 6v6M17 6v6"/></svg>`;
+  if(k.includes("guitarra")) return `<svg ${IP} style="color:#F59E0B"><path d="M15.5 3.5 20.5 8.5"/><path d="M18 6 10 14"/><path d="M8.3 10.8c-2.7.4-4.6 2.5-4.3 5.1.4 3 3.2 5.1 6.1 4.7 2.3-.3 3.7-1.9 3.5-3.7-.1-1.1-.8-1.9-1.8-2.4"/><circle cx="8.8" cy="16.3" r=".8"/><path d="M11.5 13.5 14.5 16.5"/><path d="M20 4h1v1"/></svg>`;
+  if(k.includes("saxofon")) return `<svg ${IP} style="color:#10B981"><path d="M15 3c2 2 2.4 4.8 1.2 7.4"/><path d="M16.2 10.4c-1 2.2-3 3.6-5.7 4"/><path d="M10.5 14.4c-2.7 0-4.5 1.6-4.5 3.8 0 2 1.6 3.3 3.9 3.3 3.6 0 6.1-2.6 7.6-6.4"/><path d="M13 5 17 2M17 2l3 3"/><path d="M9.5 12.5 6.5 9.5M6.5 9.5 4.5 11.5"/></svg>`;
+  if(k.includes("percus"))  return `<svg ${IP} style="color:#14B8A6"><ellipse cx="8" cy="7" rx="3.5" ry="1.8"/><path d="M4.5 7 5.5 18c.2 1.3 1.3 2.2 2.5 2.2s2.3-.9 2.5-2.2l1-11"/><ellipse cx="16" cy="8" rx="3.5" ry="1.8"/><path d="M12.5 8 13.5 18c.2 1.2 1.3 2 2.5 2s2.3-.8 2.5-2l1-10"/><path d="M5.5 4 4 2M18.5 4 20 2"/></svg>`;
+  return `<svg ${IP}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>`;
+};
+
+/* ─── UNIFORM ─── */
+function colorInfo(name=""){
+  const key=name.normalize("NFD").replace(/[̀-ͯ]/g,"").toUpperCase().trim();
+  const map={ROJO:{fill:"#DC2626",stroke:"#991B1B",text:"Rojo"},NEGRO:{fill:"#111827",stroke:"#020617",text:"Negro"},GRIS:{fill:"#9CA3AF",stroke:"#6B7280",text:"Gris"},BLANCO:{fill:"#FFFFFF",stroke:"#D1D5DB",text:"Blanco"},AZUL:{fill:"#2563EB",stroke:"#1D4ED8",text:"Azul"},VERDE:{fill:"#16A34A",stroke:"#15803D",text:"Verde"},AMARILLO:{fill:"#FACC15",stroke:"#CA8A04",text:"Amarillo"},NARANJA:{fill:"#F97316",stroke:"#C2410C",text:"Naranja"},LILA:{fill:"#C4B5FD",stroke:"#7C3AED",text:"Lila"},DORADO:{fill:"#D97706",stroke:"#B45309",text:"Dorado"},BEIGE:{fill:"#D6C3A5",stroke:"#A78B65",text:"Beige"},CAFE:{fill:"#92400E",stroke:"#78350F",text:"Café"},MORADO:{fill:"#7C3AED",stroke:"#6D28D9",text:"Morado"},ROSADO:{fill:"#EC4899",stroke:"#DB2777",text:"Rosado"}};
+  return map[key]||null;
+}
+function parseUniform(u=""){const t=u.trim();if(!t||/no asignado/i.test(t)||t.length>34)return null;const p=t.split(/\s+Y\s+|\s*,\s*|\s*\/\s*/i).map(x=>x.trim()).filter(Boolean);const top=colorInfo(p[0]);const bot=colorInfo(p[1]||p[0]);if(!top||!bot)return null;return{top,bot};}
+function uniformPiece(icon,label,color){return `<div class="uniform-piece" style="--piece-fill:${color.fill};--piece-stroke:${color.stroke};">${icon}<span>${label}<small>${color.text}</small></span></div>`;}
+function uniformIconOnly(icon,color,accent="#111827"){return `<div class="uniform-piece icon-only" style="--piece-fill:${color.fill};--piece-stroke:${color.stroke};--piece-accent:${accent};">${icon}</div>`;}
+function uniformLabel(u){const t=String(u||"").trim();if(!t||/no asignado/i.test(t))return "";return t.charAt(0).toUpperCase()+t.slice(1).toLowerCase();}
+function renderUniform(u){
+  const key=String(u||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toUpperCase().trim();
+  if(key==="GALA")return `<div class="uniform-visual uniform-gala">${uniformIconOnly(IC.galaShirt,colorInfo("AZUL"),"#F8FAFC")}${uniformIconOnly(IC.galaDress,{fill:"#F97316",stroke:"#C2410C",text:"Naranja"})}</div>`;
+  const p=parseUniform(u);
+  if(!p)return `<div class="uniform-fallback">${u||"Uniforme no asignado."}</div>`;
+  return `<div class="uniform-visual">${uniformPiece(IC.shirt,"Camisa",p.top)}${uniformPiece(IC.blouse,"Blusa",p.top)}${uniformPiece(IC.pants,"Pantalón",p.bot)}${uniformPiece(IC.skirt,"Falda",p.bot)}</div>`;
+}
+
+/* ─── DATA ─── */
+const DATA={
+  "2026-07-01":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Ramiro Espinoza",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Maribel Montoya","Gloria Giraldo","Ximena Carabali","Beatriz Vasquez"],uniforme:"Gala"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Maira Caicedo","Elizabeth Bonilla","Caridad","Janner Balanta"],uniforme:"Gala"}
+  ]},
+  "2026-07-04":{type:"sat",services:[
+    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Marly Mosquera",voces:[],uniforme:"Gala"}
+  ]},
+  "2026-07-05":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Claudia Marquez","Gloria Guerrero","Carlos Rua","Maribel Montoya"],uniforme:"Rojo y Negro"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Katherine Choco","Ximena Carabali","Beatriz Vasquez","Dayana Cordoba"],uniforme:"Rojo y Negro"}
+  ]},
+  "2026-07-08":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Gloria Guerrero","Maribel Montoya","Gina Palacios","Carlos Rua"],uniforme:"Blanco y Gris"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Andres Velez",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Katherine Choco","Caridad","Deisy Murillo","Dayana Cordoba"],uniforme:"Blanco y Gris"}
+  ]},
+  "2026-07-11":{type:"sat",services:[
+    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Elizabeth Bonilla",voces:[],uniforme:"Gala"}
+  ]},
+  "2026-07-12":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Dayana Cordoba","Elizabeth Bonilla","Gloria Giraldo","Janner Balanta"],uniforme:"Gala"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Marly Mosquera","Dorany Gonzalez","Carlos Rua","Deisy Murillo"],uniforme:"Gala"}
+  ]},
+  "2026-07-15":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Maribel Montoya","Beatriz Vasquez","Gina Palacios","Dulfais Nupan"],uniforme:"Lila y Gris"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Maira Caicedo","Caridad","Janner Balanta","Ximena Carabali"],uniforme:"Lila y Gris"}
+  ]},
+  "2026-07-18":{type:"sat",services:[
+    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Gloria Giraldo",voces:[],uniforme:"Gala"}
+  ]},
+  "2026-07-19":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Maira Caicedo","Dayana Cordoba","Marly Mosquera","Carlos Rua"],uniforme:"Blanco y Negro"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Ezequiel Cosme",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Katherine Choco",voces:["Claudia Marquez","Elizabeth Bonilla","Gloria Guerrero","Deisy Murillo"],uniforme:"Blanco y Negro"}
+  ]},
+  "2026-07-22":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Ximena Carabali","Beatriz Vasquez","Gina Palacios","Maribel Montoya"],uniforme:"Negro y Beige"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Wilder Marroquin",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Maira Caicedo","Dulfais Nupan","Caridad","Janner Balanta"],uniforme:"Negro y Beige"}
+  ]},
+  "2026-07-25":{type:"sat",services:[
+    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Dorany Gonzalez",voces:[],uniforme:"Gala"}
+  ]},
+  "2026-07-26":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Claudia Marquez","Gloria Guerrero","Janner Balanta","Caridad"],uniforme:"Gala"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Wilder Marroquin",vocalista:"Jahdiel Lopez",voces:["Katherine Choco","Ximena Carabali","Beatriz Vasquez","Marly Mosquera"],uniforme:"Gala"}
+  ]},
+  "2026-07-29":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Gloria Giraldo","Dorany Gonzalez","Carlos Rua","Deisy Murillo"],uniforme:"Blanco y Gris"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Katherine Choco",voces:["Elizabeth Bonilla","Caridad","Gina Palacios","Dulfais Nupan"],uniforme:"Blanco y Gris"}
+  ]}
+};
+
+const AVAILABLE=["2026-07"];
+const MONTHS_ES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const DAYS_HDR=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+const INST_KEYS=["bajo","bateria","piano","guitarra","saxofon","percusiones"];
+const INST_LABELS={bajo:"Bajo",bateria:"Batería",piano:"Piano / Teclado",guitarra:"Guitarra",saxofon:"Saxofón",percusiones:"Percusiones"};
+
+/* ─── STATE ─── */
+// filterRoles: Set of "vocalista"|"voz"|"musico" — same person can have multiple roles active
+const S={month:"2026-07",selDate:null,svcIdx:0,filter:null,filterRoles:new Set(),filterSearch:"",detailAnchor:null,view:"mes",weekStart:null};
+const $=id=>document.getElementById(id);
+const NA=v=>!v||v==="No asignado";
+
+/* ─── DATE HELPERS ─── */
+function todayKey(){const t=new Date();return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;}
+function addDays(ds,n){const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function getWeekStart(ds){const d=new Date(ds+'T12:00:00');const dow=d.getDay();const off=dow===0?6:dow-1;d.setDate(d.getDate()-off);return d.toISOString().slice(0,10);}
+
+/* ─── ROLE-AWARE MEMBERSHIP ─── */
+function inSvcByRole(name,role,sv){
+  if(role==="vocalista")return sv.vocalista===name;
+  if(role==="voz")return sv.voces.includes(name);
+  if(role==="musico")return INST_KEYS.some(k=>sv[k]===name);
+  return false;
+}
+function inSvcActive(sv){
+  if(!S.filter)return true;
+  const n=S.filter;
+  if(!S.filterRoles||S.filterRoles.size===0)return [sv.vocalista,...sv.voces,...INST_KEYS.map(k=>sv[k])].includes(n);
+  for(const r of S.filterRoles)if(inSvcByRole(n,r,sv))return true;
+  return false;
+}
+function countSvcsRole(name,role){
+  let n=0;Object.values(DATA).forEach(d=>d.services.forEach(sv=>{if(inSvcByRole(name,role,sv))n++;}));return n;
+}
+function filteredSvcs(services){
+  if(!S.filter)return services;
+  return services.filter(sv=>inSvcActive(sv));
+}
+
+/* ─── PEOPLE ─── */
+function vocalistas(){const s=new Set();Object.values(DATA).forEach(d=>d.services.forEach(sv=>{if(sv.vocalista&&sv.vocalista!=="No asignado")s.add(sv.vocalista);}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
+function vocesApoyo(){const s=new Set();Object.values(DATA).forEach(d=>d.services.forEach(sv=>{sv.voces.forEach(v=>{if(v&&v!=="No asignado")s.add(v);});}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
+function musicos(){const s=new Set();Object.values(DATA).forEach(d=>d.services.forEach(sv=>{INST_KEYS.forEach(k=>{if(sv[k]&&sv[k]!=="No asignado")s.add(sv[k]);});}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
+
+const PAL=[{bg:"#DBEAFE",c:"#1E40AF"},{bg:"#FEF3C7",c:"#92400E"},{bg:"#D1FAE5",c:"#065F46"},{bg:"#EDE9FE",c:"#5B21B6"},{bg:"#FCE7F3",c:"#9D174D"},{bg:"#FFEDD5",c:"#9A3412"},{bg:"#CCFBF1",c:"#0F766E"},{bg:"#E0F2FE",c:"#0369A1"},{bg:"#F0FDF4",c:"#15803D"},{bg:"#FEE2E2",c:"#991B1B"}];
+function pal(n){let h=0;for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h);return PAL[Math.abs(h)%PAL.length];}
+function initials(n){const p=n.split(" ");return(p[0][0]+(p[1]?p[1][0]:"")).toUpperCase();}
+
+/* ─── FILTER ─── */
+function filterHTML(){
+  const q=S.filterSearch.toLowerCase();
+  function minItem(name,role){
+    if(q&&!name.toLowerCase().includes(q))return "";
+    const p=pal(name);const cnt=countSvcsRole(name,role);const act=S.filter===name&&S.filterRoles.has(role);
+    return `<div class="min-item${act?" active":""}" data-n="${name}" data-r="${role}" onclick="setFilter(this.dataset.n,this.dataset.r)">
+      <div class="avatar" style="background:${p.bg};color:${p.c}">${initials(name)}</div>
+      <span class="min-name">${name}</span>
+      <span class="min-count">${cnt}</span>
+    </div>`;
+  }
+  function grp(label,names,role){const h=names.map(n=>minItem(n,role)).join("");return h?`<div class="sidebar-sec"><p class="sec-label">${label}</p><div class="min-list">${h}</div></div>`:""}
+  const clearBtn=S.filter?`<button class="filter-clear-icon" onclick="clearFilter()" title="Borrar filtro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg></button>`:"";
+  return `
+  <div class="sidebar-sec" style="margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="search-wrap" style="flex:1;margin-bottom:0">
+        <span class="s-icon">${IC.search}</span>
+        <input type="text" placeholder="Buscar nombre…" value="${S.filterSearch}" oninput="onSearch(this.value)">
+      </div>
+      ${clearBtn}
+    </div>
+  </div>
+  ${grp("Vocalistas Principales",vocalistas(),"vocalista")}
+  ${grp("Voces de Apoyo",vocesApoyo(),"voz")}
+  ${grp("Músicos",musicos(),"musico")}
+  <div class="sidebar-sec">
+    <p class="sec-label">Leyenda</p>
+    <div class="legend-row"><div class="leg-dot" style="background:#2563EB"></div>Miércoles</div>
+    <div class="legend-row"><div class="leg-dot" style="background:#FACC15"></div>Domingo</div>
+    <div class="legend-row"><div class="leg-dot" style="background:#4ADE80"></div>Sábado · Ayuno</div>
+  </div>`;
+}
+function renderFilter(){const h=filterHTML();$("deskFilterBody").innerHTML=h;$("mobFilterBody").innerHTML=h;}
+function onSearch(v){
+  S.filterSearch=v;
+  const wasDesk=!!document.activeElement?.closest("#deskFilterBody");
+  const wasMob=!!document.activeElement?.closest("#mobFilterBody");
+  renderFilter();
+  if(wasDesk){const inp=$("deskFilterBody").querySelector("input[type='text']");if(inp){inp.focus();inp.setSelectionRange(v.length,v.length);}}
+  else if(wasMob){const inp=$("mobFilterBody").querySelector("input[type='text']");if(inp){inp.focus();inp.setSelectionRange(v.length,v.length);}}
+}
+function setFilter(name,role){
+  if(S.filter===name){
+    // Same person: toggle this role
+    if(S.filterRoles.has(role))S.filterRoles.delete(role);else S.filterRoles.add(role);
+    if(S.filterRoles.size===0)S.filter=null;
+  } else {
+    // Different person: reset to just this one role
+    S.filter=name;S.filterRoles=new Set(role?[role]:[]);
+  }
+  closeMobFilter();renderAll();
+}
+
+/* ─── TOPBAR / NAV ─── */
+function updateTopbar(){
+  const hoyBtn=document.querySelector(".today-btn");
+  if(hoyBtn){const todayAvail=AVAILABLE.includes(todayKey().slice(0,7));hoyBtn.disabled=!todayAvail;hoyBtn.title=todayAvail?"":"El día de hoy no pertenece a los datos cargados";}
+
+  const [yr,mo]=S.month.split("-").map(Number);
+  const mName=MONTHS_ES[mo-1];
+  if(S.view==="semana"&&S.weekStart){
+    const ws=new Date(S.weekStart+'T12:00:00');const we=new Date(ws);we.setDate(we.getDate()+6);
+    const wsMo=MONTHS_ES[ws.getMonth()];const weMo=MONTHS_ES[we.getMonth()];
+    $("monthPickerLabel").textContent=ws.getMonth()===we.getMonth()?`${wsMo} ${ws.getFullYear()}`:`${wsMo} – ${weMo} ${we.getFullYear()}`;
+  } else {
+    $("monthPickerLabel").textContent=`${mName} ${yr}`;
+  }
+  $("monthDrop").innerHTML=AVAILABLE.map(k=>{const [y,m]=k.split("-").map(Number);const lbl=`${MONTHS_ES[m-1]} ${y}`;return `<div class="md-item${k===S.month?" cur":""}" onclick="jumpToMonth('${k}')">${lbl}</div>`;}).join("");
+  if(S.view==="mes"){
+    const [y,m]=S.month.split("-").map(Number);
+    $("prevBtn").disabled=!AVAILABLE.includes(m===1?`${y-1}-12`:`${y}-${String(m-1).padStart(2,"0")}`);
+    $("nextBtn").disabled=!AVAILABLE.includes(m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,"0")}`);
+  } else {$("prevBtn").disabled=false;$("nextBtn").disabled=false;}
+  $("vt-mes").classList.toggle("active",S.view==="mes");
+  $("vt-sem").classList.toggle("active",S.view==="semana");
+}
+function toggleMonthDrop(){$("monthDrop").classList.toggle("open");$("monthPickerEl").classList.toggle("open");}
+function jumpToMonth(k){S.month=k;if(S.view==="semana")S.weekStart=getWeekStart(k+"-01");S.selDate=null;S.svcIdx=0;S.detailAnchor=null;$("monthDrop").classList.remove("open");$("monthPickerEl").classList.remove("open");closeDetail(true);renderAll();}
+document.addEventListener("pointerdown",e=>{if(!e.target.closest("#monthPickerEl")){$("monthDrop").classList.remove("open");$("monthPickerEl").classList.remove("open");}});
+function goToday(){const t=todayKey();if(!AVAILABLE.includes(t.slice(0,7)))return;S.month=t.slice(0,7);S.weekStart=getWeekStart(t);S.selDate=null;S.svcIdx=0;S.detailAnchor=null;closeDetail(true);renderAll();}
+function setView(v){S.view=v;if(v==="semana"){if(!S.weekStart||!AVAILABLE.includes(S.weekStart.slice(0,7)))S.weekStart=getWeekStart(S.month+"-01");}S.selDate=null;S.svcIdx=0;S.detailAnchor=null;closeDetail(true);renderAll();}
+function navPrev(){
+  if(S.view==="semana"){S.weekStart=addDays(S.weekStart,-7);S.month=S.weekStart.slice(0,7);}
+  else{const[y,m]=S.month.split("-").map(Number);const pk=m===1?`${y-1}-12`:`${y}-${String(m-1).padStart(2,"0")}`;if(!AVAILABLE.includes(pk))return;S.month=pk;}
+  S.selDate=null;S.svcIdx=0;S.detailAnchor=null;closeDetail(true);renderAll();
+}
+function navNext(){
+  if(S.view==="semana"){S.weekStart=addDays(S.weekStart,7);S.month=S.weekStart.slice(0,7);}
+  else{const[y,m]=S.month.split("-").map(Number);const nk=m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,"0")}`;if(!AVAILABLE.includes(nk))return;S.month=nk;}
+  S.selDate=null;S.svcIdx=0;S.detailAnchor=null;closeDetail(true);renderAll();
+}
+
+/* ─── CALENDAR ─── */
+const ROLE_LABEL={vocalista:"Vocalista Principal",voz:"Voces de Apoyo",musico:"Músico"};
+
+function renderCalendar(){
+  updateTopbar();
+  // Filter status pill
+  const fs=$("filterStatus");
+  if(fs){
+    if(S.filter){
+      const roles=[...S.filterRoles].map(r=>ROLE_LABEL[r]).filter(Boolean);
+      const rl=roles.length?` <em>${roles.join(" + ")}</em>`:"";
+      fs.innerHTML=`<strong>${S.filter}</strong>${rl}`;fs.classList.add("on");
+    } else {fs.innerHTML="";fs.classList.remove("on");}
+  }
+  const mcf=$("mobClearFilter");if(mcf)mcf.classList.toggle("visible",!!S.filter);
+  if(S.view==="semana")renderWeekView();else renderMonthView();
+}
+
+function renderMonthView(){
+  const [yr,mo]=S.month.split("-").map(Number);
+  $("dayHdrGrid").style.display="grid";
+  $("dayHdrGrid").innerHTML=DAYS_HDR.map(d=>`<div class="day-hdr">${d}</div>`).join("");
+  const first=new Date(yr,mo-1,1);
+  const off=first.getDay()===0?6:first.getDay()-1;
+  const days=new Date(yr,mo,0).getDate();
+  const todayStr=todayKey();
+  let h="";
+  for(let i=0;i<off;i++)h+=`<div class="day-cell outside"></div>`;
+  for(let d=1;d<=days;d++){
+    const dk=`${yr}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const dd=DATA[dk];const isToday=dk===todayStr;
+    if(dd){
+      const svcs=filteredSvcs(dd.services);
+      const cards=svcs.map(sv=>`<button class="svc-card ${dd.type}" data-dk="${dk}" data-i="${dd.services.indexOf(sv)}"><span class="svc-time">${sv.time.toUpperCase()}</span><span class="svc-name">${sv.vocalista.split(" ")[0]}</span></button>`).join("");
+      const hasSvc=svcs.length>0;
+      h+=`<div class="day-cell${hasSvc?" has-events":""}${isToday?" today":""}" data-dk="${dk}"><div class="d-num">${d}</div><div class="d-chips">${cards}</div></div>`;
+    } else {
+      h+=`<div class="day-cell${isToday?" today":""}"><div class="d-num">${d}</div></div>`;
+    }
+  }
+  $("calGrid").removeAttribute("style");$("calGrid").className="cal-grid";$("calGrid").innerHTML=h;
+  $("calGrid").querySelectorAll(".svc-card").forEach(btn=>{btn.addEventListener("click",e=>{e.stopPropagation();openDetail(btn.dataset.dk,Number(btn.dataset.i),btn);});});
+  $("calGrid").querySelectorAll(".day-cell.has-events").forEach(cell=>{cell.addEventListener("click",e=>{if(e.target.closest(".svc-card"))return;const dd=DATA[cell.dataset.dk];if(!dd)return;const svcs=filteredSvcs(dd.services);if(!svcs.length)return;openDetail(cell.dataset.dk,0,cell);});});
+}
+
+function renderWeekView(){
+  if(!S.weekStart)S.weekStart=getWeekStart(todayKey());
+  $("dayHdrGrid").style.display="none";$("dayHdrGrid").innerHTML="";
+  const todayStr=todayKey();
+  let h="";
+  for(let i=0;i<7;i++){
+    const dk=addDays(S.weekStart,i);const dd=DATA[dk];
+    const d=new Date(dk+'T12:00:00');const isToday=dk===todayStr;
+    const svcs=dd?filteredSvcs(dd.services):[];
+    const cards=svcs.map(sv=>`<button class="svc-card ${dd.type}" data-dk="${dk}" data-i="${dd.services.indexOf(sv)}"><span class="svc-time">${sv.time.toUpperCase()}</span><span class="svc-name">${sv.vocalista.split(" ")[0]}</span></button>`).join("");
+    h+=`<div class="week-col"><div class="week-hdr"><span class="wh-day">${DAYS_HDR[i]}</span><span class="wh-num${isToday?" today":""}">${d.getDate()}</span></div><div class="week-body${svcs.length?" has-svc":""}" data-dk="${dk}">${cards}</div></div>`;
+  }
+  $("calGrid").className="cal-grid";$("calGrid").style.cssText="display:grid;grid-template-columns:repeat(7,1fr);height:calc(100vh - 148px)";
+  $("calGrid").innerHTML=h;
+  $("calGrid").querySelectorAll(".svc-card").forEach(btn=>{btn.addEventListener("click",e=>{e.stopPropagation();openDetail(btn.dataset.dk,Number(btn.dataset.i),btn);});});
+  $("calGrid").querySelectorAll(".week-body.has-svc").forEach(body=>{body.addEventListener("click",e=>{if(e.target.closest(".svc-card"))return;const dd=DATA[body.dataset.dk];if(!dd)return;const svcs=filteredSvcs(dd.services);if(!svcs.length)return;openDetail(body.dataset.dk,0,body);});});
+}
+
+/* ─── DETAIL ─── */
+const detailMount=$("detailMount");const calWrapper=$("calWrapper");
+const longDate=new Intl.DateTimeFormat("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+function rememberAnchor(el){if(!el)return;const r=el.getBoundingClientRect();S.detailAnchor={left:r.left,right:r.right,top:r.top,bottom:r.bottom};}
+function positionPanel(){
+  const panel=detailMount.querySelector(".service-detail-floating");
+  if(!panel||!S.detailAnchor||window.matchMedia("(max-width:768px)").matches)return;
+  const gap=14,margin=16,pw=panel.offsetWidth,ph=panel.offsetHeight,vw=window.innerWidth,vh=window.innerHeight;
+  let left=S.detailAnchor.right+gap;
+  if(left+pw>vw-margin)left=S.detailAnchor.left-pw-gap;
+  if(left<margin)left=Math.min(Math.max(S.detailAnchor.left,margin),vw-pw-margin);
+  let top=S.detailAnchor.top;
+  if(top+ph>vh-margin)top=vh-ph-margin;
+  if(top<margin)top=margin;
+  panel.style.setProperty("--detail-left",`${Math.round(left)}px`);panel.style.setProperty("--detail-top",`${Math.round(top)}px`);
+}
+
+function renderDetail(){
+  if(!S.selDate||!DATA[S.selDate]){detailMount.innerHTML="";calWrapper.classList.remove("has-detail");return;}
+  const dd=DATA[S.selDate];
+  const svcs=filteredSvcs(dd.services);
+  if(!svcs.length){detailMount.innerHTML="";calWrapper.classList.remove("has-detail");return;}
+  const si=Math.min(S.svcIdx,svcs.length-1);const sv=svcs[si];
+  const dateLabel=longDate.format(new Date(`${S.selDate}T12:00:00`));
+  const uLabel=uniformLabel(sv.uniforme);
+  const voices=sv.voces.filter(v=>v&&v!=="No asignado");
+  const hasMusicos=INST_KEYS.some(k=>!NA(sv[k]));
+  const instRows=INST_KEYS.map(k=>{const val=sv[k];const na=NA(val);return `<div class="detail-row"><span>${instIcon(k)}</span><strong>${INST_LABELS[k]}</strong><span class="${na?"na":""}">${na?"No asignado":val}</span></div>`;}).join("");
+  detailMount.innerHTML=`
+    <aside class="service-detail-floating" aria-label="Detalle del servicio">
+      <div class="detail-header-row">
+        <div class="detail-date-line">${IC.cal}<span>${dateLabel}</span></div>
+        <button class="close-detail" aria-label="Cerrar">${IC.x}</button>
+      </div>
+      <div class="time-tabs">${svcs.map((s,i)=>`<button class="time-tab${i===si?" active":""}" data-i="${i}">${s.time.toUpperCase()}</button>`).join("")}</div>
+      <div class="detail-date-line" style="margin-bottom:16px;gap:6px;color:#6B7280;font-size:13px;">${IC.clock}<span>${sv.range}</span></div>
+      <section class="principal-block"><span>${IC.mic}</span><div><h2 class="principal-name">${sv.vocalista}</h2><div class="principal-role">Vocalista Principal</div></div></section>
+      ${voices.length>0?`<section class="detail-section"><h3 class="detail-section-title">Voces de Apoyo</h3><div class="detail-list">${voices.map(v=>`<div class="detail-row"><span>${IC.mic2}</span><strong>${v}</strong><span></span></div>`).join("")}</div></section>`:""}
+      ${hasMusicos?`<section class="detail-section"><h3 class="detail-section-title">Equipo de Músicos</h3><div class="detail-list">${instRows}</div></section>`:""}
+      <div class="uniform-section"><strong>${IC.tag} Uniforme${uLabel?" – "+uLabel:""}</strong>${renderUniform(sv.uniforme)}</div>
+    </aside>`;
+  calWrapper.classList.add("has-detail");
+  const panel=detailMount.querySelector(".service-detail-floating");if(panel)panel.scrollTop=0;
+  detailMount.querySelector(".close-detail").addEventListener("click",()=>closeDetail());
+  detailMount.querySelectorAll(".time-tab").forEach(tab=>{tab.addEventListener("click",()=>{S.svcIdx=Number(tab.dataset.i);renderDetail();});});
+  positionPanel();
+}
+
+function openDetail(dk,idx,anchor=null){rememberAnchor(anchor);S.selDate=dk;S.svcIdx=idx;renderCalendar();renderDetail();}
+function closeDetail(instant=false){
+  const panel=detailMount.querySelector(".service-detail-floating");
+  if(!panel){calWrapper.classList.remove("has-detail");return;}
+  if(instant){detailMount.innerHTML="";calWrapper.classList.remove("has-detail");return;}
+  panel.classList.add("is-closing");
+  setTimeout(()=>{S.selDate=null;S.svcIdx=0;S.detailAnchor=null;detailMount.innerHTML="";calWrapper.classList.remove("has-detail");renderCalendar();},150);
+}
+
+document.addEventListener("pointerdown",e=>{
+  const panel=detailMount.querySelector(".service-detail-floating");
+  if(!panel)return;if(panel.contains(e.target))return;if(e.target.closest(".svc-card"))return;
+  closeDetail();
+});
+window.addEventListener("resize",positionPanel);
+
+/* ─── MOBILE FILTER ─── */
+function openMobFilter(){$("mobFilterOverlay").classList.add("open");$("mobFilterPanel").classList.add("open");}
+function closeMobFilter(){$("mobFilterOverlay").classList.remove("open");$("mobFilterPanel").classList.remove("open");}
+function clearFilter(){S.filter=null;S.filterRoles=new Set();S.filterSearch="";renderAll();}
+function updateHdrBtn(){const btn=$("hdrFilterBtn");if(S.filter){btn.classList.add("has-filter");btn.innerHTML=`${IC.filter} ${initials(S.filter)}`;}else{btn.classList.remove("has-filter");btn.innerHTML=`${IC.filter} Ministro`;}}
+
+/* ─── INIT ─── */
+function renderAll(){if(!S.weekStart)S.weekStart=getWeekStart(S.month+"-01");renderFilter();renderCalendar();renderDetail();updateHdrBtn();}
+renderAll();
+</script>
+</body>
+</html>
