@@ -20,16 +20,17 @@ button,input{font:inherit;color:inherit}
   --shadow:0 24px 70px rgba(0,0,0,.14);
   font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
+html,body{height:100%;overflow:hidden;}
 html{-webkit-text-size-adjust:100%}
 body{
-  margin:0;min-height:100vh;
+  margin:0;
   background:radial-gradient(circle at 86% 8%,rgba(255,255,255,.9),rgba(255,255,255,0) 360px),linear-gradient(180deg,#F8FAFC 0%,#EEF2F7 100%);
   color:var(--text);font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   -webkit-font-smoothing:antialiased;
 }
 
 /* ─── HEADER ─── */
-.app-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 1px 2px rgba(0,0,0,.05);}
+.app-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;gap:12px;position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 1px 2px rgba(0,0,0,.05);}
 .logo-mark{width:34px;height:34px;flex-shrink:0;background:linear-gradient(135deg,#EF4444 0%,#111827 100%);border-radius:10px;display:flex;align-items:center;justify-content:center;}
 .app-name{font-size:15px;font-weight:700;letter-spacing:-.01em}
 .app-tagline{font-size:10px;color:var(--muted);font-weight:400;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
@@ -39,7 +40,7 @@ body{
 .hdr-filter-btn.has-filter{background:#EFF6FF;border-color:#BFDBFE;color:var(--blue)}
 
 /* ─── LAYOUT ─── */
-.layout{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 58px);overflow:hidden;}
+.layout{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 58px);overflow:hidden;margin-top:58px;}
 
 /* ─── SIDEBAR ─── */
 .sidebar{background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;padding:22px 16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
@@ -61,14 +62,18 @@ body{
 .min-item.active .min-name{color:var(--blue)}
 .min-count{font-size:10px;font-weight:600;background:var(--bg);border-radius:999px;padding:1px 6px;color:var(--muted);}
 .min-item.active .min-count{background:#DBEAFE;color:var(--blue)}
-.legend-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--muted)}
-.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.bday-list-row{display:flex;align-items:baseline;gap:6px;padding:4px 0;border-bottom:1px solid #FEE2F0;}
+.bday-list-row:last-child{border-bottom:none;}
+.bday-list-date{font-size:10px;font-weight:700;color:#BE185D;white-space:nowrap;flex-shrink:0;}
+.bday-list-name{font-size:12px;font-weight:600;color:#111827;line-height:1.3;}
 /* Clear icon inside filter */
 .filter-clear-icon{flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--muted);cursor:pointer;transition:all .14s ease;font-family:inherit;}
 .filter-clear-icon:hover{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
 
 /* ─── CALENDAR SECTION ─── */
-.cal-section{overflow:hidden;padding:14px 22px 0;display:flex;flex-direction:column;}
+.cal-section{overflow:hidden;padding:14px 22px 0;display:flex;flex-direction:column;height:calc(100vh - 58px);}
+.cal-scroll-body{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;max-height:100%;}
+.cal-scroll-body.stats-active{overflow-y:auto;overflow-x:hidden;padding-bottom:32px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 
 /* ─── TOPBAR ─── */
 .cal-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-shrink:0;}
@@ -102,7 +107,7 @@ body{
 .filter-status em{color:var(--blue);font-style:normal;font-weight:600}
 
 /* ─── CAL WRAPPER ─── */
-.cal-wrapper{position:relative;height:calc(100vh - 148px);background:var(--panel);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;}
+.cal-wrapper{position:relative;height:calc(100vh - 148px);flex-shrink:0;background:var(--panel);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;}
 .cal-wrapper::after{content:"";position:absolute;inset:0;z-index:15;pointer-events:none;opacity:0;background:rgba(255,255,255,.62);backdrop-filter:blur(5px) saturate(1.08);-webkit-backdrop-filter:blur(5px) saturate(1.08);transition:opacity .2s ease;}
 .cal-wrapper.has-detail::after{opacity:1}
 
@@ -263,8 +268,28 @@ body{
 .stats-panel.active{display:flex}
 .stat-card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:18px 16px;box-shadow:0 2px 14px rgba(0,0,0,.06)}
 .stat-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.10em;color:#111827;margin:0 0 14px;text-align:center}
-.cal-section.stats-active{overflow-y:auto}
-.cal-section.stats-active .cal-topbar{position:sticky;top:0;z-index:20;background:var(--bg);padding-top:14px;padding-bottom:12px;margin-bottom:0}
+
+/* ─── BIRTHDAY ─── */
+.bday-chip{display:flex;align-items:flex-start;gap:2px;padding:2px 4px;border-radius:7px;background:#FCE7F3;border:1px solid #F9A8D4;line-height:1.3;margin-top:2px;overflow:hidden;width:100%;box-sizing:border-box;}
+.bday-chip .bday-emoji{flex-shrink:0;font-size:clamp(8px,1.9vw,11px);line-height:1.3;}
+.bday-chip strong{color:#111827;font-weight:800;font-size:clamp(7.5px,1.75vw,11px);overflow:hidden;line-height:1.25;display:block;min-width:0;flex:1;}
+.bday-chip strong span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
+.day-cell.has-bday:not(.has-events){background:#FFF0F7;}
+.day-cell.has-bday:not(.has-events) .d-num{color:#BE185D;}
+
+/* ─── BIRTHDAY CARD ─── */
+.bday-overlay{display:block;position:fixed;inset:0;background:transparent;z-index:150;pointer-events:none;}
+.bday-overlay.on{pointer-events:all;}
+.bday-card{position:fixed;left:max(16px,calc(50% - 160px));right:max(16px,calc(50% - 160px));top:50%;transform:translateY(-50%);background:linear-gradient(145deg,#FF6B9D 0%,#FF8FAB 40%,#FFB3C6 100%);border-radius:24px;padding:32px 24px;z-index:160;box-shadow:0 20px 60px rgba(255,107,157,.4);text-align:center;animation:bdayIn .28s cubic-bezier(.34,1.56,.64,1);}
+.bday-card.is-closing{animation:bdayOut .18s ease-in forwards}
+@keyframes bdayIn{from{opacity:0;transform:translateY(calc(-50% + 24px)) scale(.92)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@keyframes bdayOut{from{opacity:1;transform:translateY(-50%) scale(1)}to{opacity:0;transform:translateY(calc(-50% + 16px)) scale(.95)}}
+.bday-card-emoji{font-size:52px;line-height:1;margin-bottom:12px;display:block;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+.bday-card-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.bday-card-name{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.02em;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+.bday-card-date{font-size:14px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:20px}
+.bday-card-close{border:none;background:rgba(255,255,255,.25);color:#fff;font-size:13px;font-weight:700;padding:10px 28px;border-radius:99px;cursor:pointer;backdrop-filter:blur(8px);transition:background .15s;font-family:inherit}
+.bday-card-close:hover{background:rgba(255,255,255,.4)}
 </style>
 </head>
 <body>
@@ -326,13 +351,15 @@ body{
       </div>
     </div>
 
-    <div class="cal-wrapper" id="calWrapper">
-      <div class="day-hdr-grid" id="dayHdrGrid"></div>
-      <div class="cal-grid" id="calGrid"></div>
-      <div class="filter-status" id="filterStatus" aria-live="polite"></div>
-    </div>
+    <div class="cal-scroll-body" id="calScrollBody">
+      <div class="cal-wrapper" id="calWrapper">
+        <div class="day-hdr-grid" id="dayHdrGrid"></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="filter-status" id="filterStatus" aria-live="polite"></div>
+      </div>
 
-    <div id="statsPanel" class="stats-panel"></div>
+      <div id="statsPanel" class="stats-panel"></div>
+    </div>
   </main>
 </div>
 
@@ -391,52 +418,48 @@ function renderUniform(u){
 /* ─── DATA ─── */
 const DATA={
   "2026-07-01":{type:"wed",services:[
-    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Ramiro Espinoza",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Maribel Montoya","Gloria Giraldo","Ximena Carabali","Beatriz Vasquez"],uniforme:"Gala"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Maira Caicedo","Elizabeth Bonilla","Caridad","Janner Balanta"],uniforme:"Gala"}
-  ]},
-  "2026-07-04":{type:"sat",services:[
-    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Marly Mosquera",voces:[],uniforme:"Gala"}
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Gala"}
   ]},
   "2026-07-05":{type:"sun",services:[
-    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Claudia Marquez","Gloria Guerrero","Carlos Rua","Maribel Montoya"],uniforme:"Rojo y Negro"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Katherine Choco","Ximena Carabali","Beatriz Vasquez","Dayana Cordoba"],uniforme:"Rojo y Negro"}
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Dayana Cordoba","Maribel Montoya","Beatriz Vasquez","Gina Palacios"],uniforme:"Blanco y Negro"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Katherine Choco","Marly Mosquera","Dorany Gonzalez","Dayana Cordoba"],uniforme:"Blanco y Negro"}
   ]},
   "2026-07-08":{type:"wed",services:[
-    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Gloria Guerrero","Maribel Montoya","Gina Palacios","Carlos Rua"],uniforme:"Blanco y Gris"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Andres Velez",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Katherine Choco","Caridad","Deisy Murillo","Dayana Cordoba"],uniforme:"Blanco y Gris"}
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Negro y Beige"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Jahdiel Lopez",voces:["Gloria Guerrero","Katherine Choco","Caridad","Janner Balanta"],uniforme:"Negro y Beige"}
   ]},
   "2026-07-11":{type:"sat",services:[
-    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Elizabeth Bonilla",voces:[],uniforme:"Gala"}
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Caridad",voces:[],uniforme:"Gala"}
   ]},
   "2026-07-12":{type:"sun",services:[
-    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Dayana Cordoba","Elizabeth Bonilla","Gloria Giraldo","Janner Balanta"],uniforme:"Gala"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Marly Mosquera","Dorany Gonzalez","Carlos Rua","Deisy Murillo"],uniforme:"Gala"}
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Wilder Marroquin",vocalista:"Jahdiel Lopez",voces:["Gloria Guerrero","Maira Caicedo","Maribel Montoya","Beatriz Vasquez"],uniforme:"Gala"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Ezequiel Cosme",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Katherine Choco",voces:["Maira Caicedo","Gina Palacios","Marly Mosquera","Dorany Gonzalez"],uniforme:"Gala"}
   ]},
   "2026-07-15":{type:"wed",services:[
-    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Maribel Montoya","Beatriz Vasquez","Gina Palacios","Dulfais Nupan"],uniforme:"Lila y Gris"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Maira Caicedo","Caridad","Janner Balanta","Ximena Carabali"],uniforme:"Lila y Gris"}
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Dayana Cordoba","Gina Palacios","Claudia Marquez","Gloria Giraldo"],uniforme:"Rojo y Negro"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Katherine Choco",voces:["Ximena Carabali","Elizabeth Bonilla","Gloria Guerrero","Caridad"],uniforme:"Rojo y Negro"}
   ]},
   "2026-07-18":{type:"sat",services:[
-    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Gloria Giraldo",voces:[],uniforme:"Gala"}
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Elizabeth Bonilla",voces:[],uniforme:"Gala"}
   ]},
   "2026-07-19":{type:"sun",services:[
-    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Maira Caicedo","Dayana Cordoba","Marly Mosquera","Carlos Rua"],uniforme:"Blanco y Negro"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Ezequiel Cosme",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Katherine Choco",voces:["Claudia Marquez","Elizabeth Bonilla","Gloria Guerrero","Deisy Murillo"],uniforme:"Blanco y Negro"}
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Janner Balanta","Dayana Cordoba","Maribel Montoya","Maira Caicedo"],uniforme:"Blanco y Gris"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"No asignado",vocalista:"Maira Caicedo",voces:["Beatriz Vasquez","Katherine Choco","Gina Palacios","Marly Mosquera"],uniforme:"Blanco y Gris"}
   ]},
   "2026-07-22":{type:"wed",services:[
-    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Ximena Carabali","Beatriz Vasquez","Gina Palacios","Maribel Montoya"],uniforme:"Negro y Beige"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Wilder Marroquin",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Maira Caicedo","Dulfais Nupan","Caridad","Janner Balanta"],uniforme:"Negro y Beige"}
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Ramiro Espinoza",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Beatriz Vasquez","Dorany Gonzalez","Ximena Carabali","Claudia Marquez"],uniforme:"Lila y Gris"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Wilder Marroquin",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Gloria Giraldo","Dayana Cordoba","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Lila y Gris"}
   ]},
   "2026-07-25":{type:"sat",services:[
-    {time:"Ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Dorany Gonzalez",voces:[],uniforme:"Gala"}
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Dorany Gonzalez",voces:[],uniforme:"Gala"}
   ]},
   "2026-07-26":{type:"sun",services:[
-    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Claudia Marquez","Gloria Guerrero","Janner Balanta","Caridad"],uniforme:"Gala"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Wilder Marroquin",vocalista:"Jahdiel Lopez",voces:["Katherine Choco","Ximena Carabali","Beatriz Vasquez","Marly Mosquera"],uniforme:"Gala"}
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Gloria Guerrero","Dayana Cordoba","Maribel Montoya","Caridad"],uniforme:"Gala"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Janner Balanta","Maira Caicedo","Katherine Choco","Beatriz Vasquez"],uniforme:"Gala"}
   ]},
   "2026-07-29":{type:"wed",services:[
-    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Gloria Giraldo","Dorany Gonzalez","Carlos Rua","Deisy Murillo"],uniforme:"Blanco y Gris"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Katherine Choco",voces:["Elizabeth Bonilla","Caridad","Gina Palacios","Dulfais Nupan"],uniforme:"Blanco y Gris"}
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Gina Palacios","Marly Mosquera","Dorany Gonzalez","Dayana Cordoba"],uniforme:"Negro y Beige"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Negro y Beige"}
   ]}
 };
 
@@ -446,6 +469,41 @@ const DAYS_HDR=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 const INST_KEYS=["bajo","bateria","piano","guitarra","saxofon","percusiones"];
 const INST_LABELS={bajo:"Bajo",bateria:"Batería",piano:"Piano / Teclado",guitarra:"Guitarra",saxofon:"Saxofón",percusiones:"Percusiones"};
 
+const BIRTHDAYS={
+  "02-11":["Jahdiel Lopez"],
+  "04-25":["Jhoan Mosquera"],
+  "05-02":["Josue Ovalles"],
+  "05-12":["Leandro Cosme"],
+  "05-27":["Maira Caicedo"],
+  "05-28":["Beatriz Vasquez"],
+  "06-28":["Ezequiel Cosme"],
+  "07-04":["Ramiro Espinoza"],
+  "08-05":["Wilder Marroquin"],
+  "10-21":["Andres Velez"],
+  "11-19":["Maribel Montoya"],
+  "11-28":["Emilio Cortes"],
+  "11-30":["Janner Balanta"],
+  "12-03":["Dayana Cordoba"],
+  "12-25":["Cristian Potes"],
+};
+
+const BDAY_DATES={
+  "Jahdiel Lopez":"11 de febrero",
+  "Jhoan Mosquera":"25 de abril",
+  "Josue Ovalles":"2 de mayo",
+  "Leandro Cosme":"12 de mayo",
+  "Maira Caicedo":"27 de mayo",
+  "Beatriz Vasquez":"28 de mayo",
+  "Ezequiel Cosme":"28 de junio",
+  "Ramiro Espinoza":"4 de julio",
+  "Wilder Marroquin":"5 de agosto",
+  "Andres Velez":"21 de octubre",
+  "Maribel Montoya":"19 de noviembre",
+  "Emilio Cortes":"28 de noviembre",
+  "Janner Balanta":"30 de noviembre",
+  "Dayana Cordoba":"3 de diciembre",
+  "Cristian Potes":"25 de diciembre"
+};
 /* ─── STATE ─── */
 const S={month:"2026-07",selDate:null,svcIdx:0,filter:null,filterRoles:new Set(),filterSearch:"",detailAnchor:null,view:"mes",weekStart:null};
 const $=id=>document.getElementById(id);
@@ -515,10 +573,8 @@ function filterHTML(){
   ${grp("Voces de Apoyo",vocesApoyo(),"voz")}
   ${grp("Músicos",musicos(),"musico")}
   <div class="sidebar-sec">
-    <p class="sec-label">Leyenda</p>
-    <div class="legend-row"><div class="leg-dot" style="background:#2563EB"></div>Miércoles</div>
-    <div class="legend-row"><div class="leg-dot" style="background:#FACC15"></div>Domingo</div>
-    <div class="legend-row"><div class="leg-dot" style="background:#4ADE80"></div>Sábado · Ayuno</div>
+    <p class="sec-label">🎂 Cumpleaños</p>
+    ${(()=>{const mm=S.month.split("-")[1];const rows=Object.entries(BIRTHDAYS).filter(([k])=>k.split("-")[0]===mm).sort((a,b)=>a[0].localeCompare(b[0])).flatMap(([mmdd,names])=>names.map(n=>`<div class="bday-list-row"><span class="bday-list-date">${BDAY_DATES[n]||mmdd}</span><span class="bday-list-name">${n}</span></div>`));return rows.length?rows.join(""):`<div style="font-size:12px;color:var(--muted);padding:4px 0">Sin cumpleaños este mes</div>`;})()}
   </div>`;
 }
 function renderFilter(){const h=filterHTML();$("deskFilterBody").innerHTML=h;$("mobFilterBody").innerHTML=h;}
@@ -709,10 +765,10 @@ function renderRestDates(restDates){
 }
 function renderStats(){
   const panel=$('statsPanel');
-  const section=document.querySelector('.cal-section');
+  const scrollBody=$('calScrollBody');
   if(!S.filter){
     panel.classList.remove('active');panel.innerHTML='';
-    if(section)section.classList.remove('stats-active');
+    if(scrollBody){scrollBody.classList.remove('stats-active');clearStatsScroll();}
     return;
   }
   const {byType,byRole,byWeek,restDates}=computeStats(S.filter);
@@ -727,7 +783,17 @@ function renderStats(){
     </div>
 `;
   panel.classList.add('active');
-  if(section)section.classList.add('stats-active');
+  if(scrollBody){
+    const availH=window.innerHeight-scrollBody.getBoundingClientRect().top;
+    scrollBody.style.height=availH+'px';
+    scrollBody.style.overflowY='auto';
+    scrollBody.style.overflowX='hidden';
+    scrollBody.scrollTop=0;
+  }
+}
+function clearStatsScroll(){
+  const scrollBody=$('calScrollBody');
+  if(scrollBody){scrollBody.style.height='';scrollBody.style.overflowY='';scrollBody.style.overflowX='';}
 }
 
 function renderCalendar(){
@@ -757,13 +823,18 @@ function renderMonthView(){
   for(let d=1;d<=days;d++){
     const dk=`${yr}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
     const dd=DATA[dk];const isToday=dk===todayStr;
+    const mmdd=`${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const bdayNames=BIRTHDAYS[mmdd]||[];
+    const bdayChip=bdayNames.length?bdayNames.map(n=>{const parts=n.split(" ");const first=parts[0];const last=parts.slice(1).join(" ");return`<button class="bday-chip" onclick="event.stopPropagation();openBdayCard('${n}','${mmdd}')" style="border:none;cursor:pointer;font-family:inherit;text-align:left;width:100%"><span class="bday-emoji">🎂</span><strong><span style="display:block">${first}</span>${last?`<span style="display:block">${last}</span>`:""}</strong></button>`;}).join(""):"";
+    const hasBday=bdayNames.length>0;
     if(dd){
       const svcs=filteredSvcs(dd.services);
       const cards=svcs.map(sv=>`<button class="svc-card ${dd.type}" data-dk="${dk}" data-i="${dd.services.indexOf(sv)}"><span class="svc-time">${sv.time.toUpperCase()}</span><span class="svc-name">${sv.vocalista.split(" ")[0]}</span></button>`).join("");
       const hasSvc=svcs.length>0;
-      h+=`<div class="day-cell${hasSvc?" has-events":""}${isToday?" today":""}" data-dk="${dk}"><div class="d-num">${d}</div><div class="d-chips">${cards}</div></div>`;
+      h+=`<div class="day-cell${hasSvc?" has-events":""}${isToday?" today":""}${hasBday?" has-bday":""}" data-dk="${dk}"><div class="d-num">${d}</div><div class="d-chips">${cards}${bdayChip}</div></div>`;
     } else {
-      h+=`<div class="day-cell${isToday?" today":""}"><div class="d-num">${d}</div></div>`;
+      const cellClick=hasBday?`onclick="openBdayCard('${bdayNames[0]}','${mmdd}')" style="cursor:pointer"`:"";
+      h+=`<div class="day-cell${isToday?" today":""}${hasBday?" has-bday has-events":""}" data-dk="${dk}" ${cellClick}><div class="d-num">${d}</div><div class="d-chips">${bdayChip}</div></div>`;
     }
   }
   $("calGrid").removeAttribute("style");$("calGrid").className="cal-grid";$("calGrid").innerHTML=h;
@@ -816,7 +887,8 @@ function renderDetail(){
   const uLabel=uniformLabel(sv.uniforme);
   const voices=sv.voces.filter(v=>v&&v!=="No asignado");
   const hasMusicos=INST_KEYS.some(k=>!NA(sv[k]));
-  const instRows=INST_KEYS.map(k=>{const val=sv[k];const na=NA(val);return `<div class="detail-row"><span>${instIcon(k)}</span><strong>${INST_LABELS[k]}</strong><span class="detail-row-val${na?" na":""}">${na?"No asignado":val}</span></div>`;}).join("");
+  const hl=n=>S.filter&&n===S.filter?`<span style="color:#1D4ED8;font-weight:900">${n}</span>`:n;
+  const instRows=INST_KEYS.map(k=>{const val=sv[k];const na=NA(val);return `<div class="detail-row"><span>${instIcon(k)}</span><strong>${INST_LABELS[k]}</strong><span class="detail-row-val${na?" na":""}">${na?"No asignado":hl(val)}</span></div>`;}).join("");
   detailMount.innerHTML=`
     <aside class="service-detail-floating" aria-label="Detalle del servicio">
       <div class="detail-header-row">
@@ -825,8 +897,8 @@ function renderDetail(){
       </div>
       <div class="time-tabs">${svcs.map((s,i)=>`<button class="time-tab${i===si?" active":""}" data-i="${i}">${s.time.toUpperCase()}</button>`).join("")}</div>
       <div class="detail-date-line" style="margin-bottom:16px;gap:6px;color:#6B7280;font-size:13px;">${IC.clock}<span>${sv.range}</span></div>
-      <section class="principal-block"><span>${IC.mic}</span><div><h2 class="principal-name">${sv.vocalista}</h2><div class="principal-role">Vocalista Principal</div></div></section>
-      ${voices.length>0?`<section class="detail-section"><h3 class="detail-section-title">Voces de Apoyo</h3><div class="detail-list">${voices.map(v=>`<div class="detail-row"><span>${IC.mic2}</span><strong>${v}</strong><span></span></div>`).join("")}</div></section>`:""}
+      <section class="principal-block"><span>${IC.mic}</span><div><h2 class="principal-name" style="${S.filter&&sv.vocalista===S.filter?"color:#1D4ED8":""}">${sv.vocalista}</h2><div class="principal-role">Vocalista Principal</div></div></section>
+      ${voices.length>0?`<section class="detail-section"><h3 class="detail-section-title">Voces de Apoyo</h3><div class="detail-list">${voices.map(v=>`<div class="detail-row"><span>${IC.mic2}</span><strong>${hl(v)}</strong><span></span></div>`).join("")}</div></section>`:""}
       ${hasMusicos?`<section class="detail-section"><h3 class="detail-section-title">Equipo de Músicos</h3><div class="detail-list">${instRows}</div></section>`:""}
       <div class="uniform-section"><strong>${IC.tag} Uniforme${uLabel?" – "+uLabel:""}</strong>${renderUniform(sv.uniforme)}</div>
     </aside>`;
@@ -838,7 +910,7 @@ function renderDetail(){
   positionPanel();
 }
 
-function openDetail(dk,idx,anchor=null){rememberAnchor(anchor);S.selDate=dk;S.svcIdx=idx;renderCalendar();renderDetail();}
+function openDetail(dk,idx,anchor=null){if($('bdayCard'))return;if(!DATA[dk]||!DATA[dk].services.length)return;rememberAnchor(anchor);S.selDate=dk;S.svcIdx=idx;renderCalendar();renderDetail();}
 function closeDetail(instant=false){
   $("detailOverlay").classList.remove("on");
   const panel=detailMount.querySelector(".service-detail-floating");
@@ -864,6 +936,39 @@ function updateHdrBtn(){const btn=$("hdrFilterBtn");if(S.filter){btn.classList.a
 /* ─── INIT ─── */
 function renderAll(){if(!S.weekStart)S.weekStart=getWeekStart(S.month+"-01");renderFilter();renderCalendar();renderDetail();updateHdrBtn();}
 renderAll();
+
+/* ─── BIRTHDAY CARD ─── */
+function openBdayCard(name, mmdd){
+  const overlay=$('bdayOverlay');
+  const mount=$('bdayMount');
+  const dateStr=BDAY_DATES[name]||mmdd;
+  mount.innerHTML=`<div class="bday-card" id="bdayCard">
+    <span class="bday-card-emoji">🎂🕯️</span>
+    <div class="bday-card-label">¡Feliz cumpleaños!</div>
+    <div class="bday-card-name">${name}</div>
+    <div class="bday-card-date">🎉 ${dateStr}</div>
+    <button class="bday-card-close" onclick="closeBdayCard()">Cerrar</button>
+  </div>`;
+  overlay.classList.add('on');
+  // blur calendar + block interactions
+  calWrapper.classList.add('has-detail');
+  document.body.style.overflow='hidden';
+}
+function closeBdayCard(){
+  const overlay=$('bdayOverlay');
+  const card=$('bdayCard');
+  if(!card)return;
+  card.classList.add('is-closing');
+  setTimeout(()=>{
+    $('bdayMount').innerHTML='';
+    overlay.classList.remove('on');
+    calWrapper.classList.remove('has-detail');
+    document.body.style.overflow='';
+  },180);
+}
+
 </script>
+<div class="bday-overlay" id="bdayOverlay" onclick="closeBdayCard()"></div>
+<div id="bdayMount"></div>
 </body>
 </html>
