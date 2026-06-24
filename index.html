@@ -157,13 +157,14 @@ body{
 .cal-grid[data-weeks="5"] .svc-time{font-size:7px}
 .cal-grid[data-weeks="5"] .svc-name{font-size:9px}
 /* ─── MESES 6 FILAS ─── */
-.cal-grid[data-weeks="6"] .day-cell{padding:4px 5px}
-.cal-grid[data-weeks="6"] .d-num{font-size:11px;margin-bottom:1px}
-.cal-grid[data-weeks="6"] .d-chips{gap:1px;margin-top:1px}
-.cal-grid[data-weeks="6"] .svc-card{padding:2px 4px;border-radius:7px;box-shadow:none}
-.cal-grid[data-weeks="6"] .svc-time{font-size:6px;margin-bottom:0}
-.cal-grid[data-weeks="6"] .svc-name{font-size:8px}
-.cal-grid[data-weeks="6"] .bday-chip{padding:1px 3px;margin-top:1px}
+.cal-wrapper:has(.cal-grid[data-weeks="6"]){overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.cal-grid[data-weeks="6"]{flex:none;height:calc((100vh - 182px) * 1.2)}
+.cal-grid[data-weeks="6"] .day-cell{padding:5px 6px}
+.cal-grid[data-weeks="6"] .d-num{font-size:12px;margin-bottom:2px}
+.cal-grid[data-weeks="6"] .d-chips{gap:2px;margin-top:1px}
+.cal-grid[data-weeks="6"] .svc-card{padding:2px 5px}
+.cal-grid[data-weeks="6"] .svc-time{font-size:7px}
+.cal-grid[data-weeks="6"] .svc-name{font-size:9px}
 /* ─── MÓVIL: mantener legibilidad ─── */
 @media(max-width:900px){
   .cal-grid[data-weeks="5"] .svc-card,.cal-grid[data-weeks="6"] .svc-card{padding:2px 5px}
