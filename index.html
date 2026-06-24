@@ -109,7 +109,7 @@ body{
 /* ─── CAL WRAPPER ─── */
 .cal-wrapper{position:relative;height:calc(100vh - 148px);flex-shrink:0;background:var(--panel);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;}
 .cal-wrapper::after{content:"";position:absolute;inset:0;z-index:15;pointer-events:none;opacity:0;background:rgba(255,255,255,.62);backdrop-filter:blur(5px) saturate(1.08);-webkit-backdrop-filter:blur(5px) saturate(1.08);transition:opacity .2s ease;}
-.cal-wrapper.has-detail::after{opacity:1}
+.cal-wrapper.has-detail::after{opacity:1;pointer-events:all}
 
 /* ─── MONTH VIEW ─── */
 .day-hdr-grid{display:grid;grid-template-columns:repeat(7,1fr)}
@@ -147,6 +147,31 @@ body{
 .week-body .svc-card{padding:5px 8px;border-radius:10px;margin-bottom:2px}
 .week-body .svc-time{font-size:9px}
 .week-body .svc-name{font-size:11.5px}
+
+/* ─── MESES 5 FILAS ─── */
+.cal-grid[data-weeks="5"] .day-cell{padding:5px 6px}
+.cal-grid[data-weeks="5"] .d-num{font-size:12px;margin-bottom:2px}
+.cal-grid[data-weeks="5"] .d-chips{gap:2px;margin-top:1px}
+.cal-grid[data-weeks="5"] .svc-card{padding:2px 5px}
+.cal-grid[data-weeks="5"] .svc-time{font-size:7px}
+.cal-grid[data-weeks="5"] .svc-name{font-size:9px}
+/* ─── MESES 6 FILAS ─── */
+.cal-grid[data-weeks="6"] .day-cell{padding:4px 5px}
+.cal-grid[data-weeks="6"] .d-num{font-size:11px;margin-bottom:1px}
+.cal-grid[data-weeks="6"] .d-chips{gap:1px;margin-top:1px}
+.cal-grid[data-weeks="6"] .svc-card{padding:2px 4px;border-radius:7px;box-shadow:none}
+.cal-grid[data-weeks="6"] .svc-time{font-size:6px;margin-bottom:0}
+.cal-grid[data-weeks="6"] .svc-name{font-size:8px}
+.cal-grid[data-weeks="6"] .bday-chip{padding:1px 3px;margin-top:1px}
+/* ─── MÓVIL: mantener legibilidad ─── */
+@media(max-width:900px){
+  .cal-grid[data-weeks="5"] .svc-card,.cal-grid[data-weeks="6"] .svc-card{padding:2px 5px}
+  .cal-grid[data-weeks="5"] .svc-time,.cal-grid[data-weeks="6"] .svc-time{font-size:7.5px;margin-bottom:1px}
+  .cal-grid[data-weeks="5"] .svc-name,.cal-grid[data-weeks="6"] .svc-name{font-size:9.5px}
+  .cal-grid[data-weeks="5"] .day-cell,.cal-grid[data-weeks="6"] .day-cell{padding:5px}
+  .cal-grid[data-weeks="5"] .d-num,.cal-grid[data-weeks="6"] .d-num{font-size:12px;margin-bottom:2px}
+  .cal-grid[data-weeks="5"] .d-chips,.cal-grid[data-weeks="6"] .d-chips{gap:2px;margin-top:1px}
+}
 
 /* ─── FLOATING DETAIL ─── */
 .service-detail-floating{position:fixed;left:var(--detail-left,50%);top:var(--detail-top,96px);width:min(400px,calc(100vw - 32px));height:auto;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:16px;z-index:160;animation:floatIn .22s ease-out;scrollbar-width:thin;scrollbar-color:var(--border) transparent;font-family:'Plus Jakarta Sans',sans-serif;}
@@ -270,12 +295,11 @@ body{
 .stat-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.10em;color:#111827;margin:0 0 14px;text-align:center}
 
 /* ─── BIRTHDAY ─── */
-.bday-chip{display:flex;align-items:flex-start;gap:2px;padding:2px 4px;border-radius:7px;background:#FCE7F3;border:1px solid #F9A8D4;line-height:1.3;margin-top:2px;overflow:hidden;width:100%;box-sizing:border-box;}
-.bday-chip .bday-emoji{flex-shrink:0;font-size:clamp(8px,1.9vw,11px);line-height:1.3;}
-.bday-chip strong{color:#111827;font-weight:800;font-size:clamp(7.5px,1.75vw,11px);overflow:hidden;line-height:1.25;display:block;min-width:0;flex:1;}
-.bday-chip strong span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
-.day-cell.has-bday:not(.has-events){background:#FFF0F7;}
-.day-cell.has-bday:not(.has-events) .d-num{color:#BE185D;}
+.bday-chip{display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 4px;border-radius:7px;background:#FCE7F3;border:1px solid #F9A8D4;line-height:1.3;margin-top:2px;overflow:hidden;width:100%;box-sizing:border-box;text-align:center;}
+.bday-chip .bday-emoji{font-size:clamp(10px,2vw,14px);line-height:1;}
+.bday-chip strong{color:#111827;font-weight:800;font-size:clamp(7.5px,1.75vw,10px);line-height:1.2;display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;}
+.day-cell.has-bday{background:#FFF0F7;}
+.day-cell.has-bday .d-num{color:#BE185D;}
 
 /* ─── BIRTHDAY CARD ─── */
 .bday-overlay{display:block;position:fixed;inset:0;background:transparent;z-index:150;pointer-events:none;}
@@ -417,53 +441,100 @@ function renderUniform(u){
 
 /* ─── DATA ─── */
 const DATA={
+  "2026-06-03":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"Jahdiel Lopez",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Hector Velez",voces:["Dulfais Nupan","Gloria Giraldo","Ximena Carabali","Beatriz Vasquez"],uniforme:""},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"No asignado",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Dayana Cordoba","Elizabeth Bonilla","Caridad","Janner Balanta"],uniforme:""}]},
+  "2026-06-07":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Claudia Marquez","Dayana Cordoba","Gloria Guerrero","Elizabeth Bonilla"],uniforme:""},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Claudia Marquez","Dayana Cordoba","Gloria Guerrero","Elizabeth Bonilla"],uniforme:""}]},
+  "2026-06-10":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"Leandro Cosme",bateria:"No asignado",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Katherine Choco",voces:["Marly Mosquera","Dorany Gonzalez","Carlos Rua","Deisy Murillo"],uniforme:""},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"No asignado",bateria:"Leandro Cosme",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Beatriz Vasquez","Gina Palacios","Deisy Murillo","Maribel Montoya"],uniforme:""}]},
+  "2026-06-14":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Cristian Potes",bateria:"Andres Velez",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Wilder Marroquin",vocalista:"Jahdiel Lopez",voces:["Dulfais Nupan","Gloria Giraldo","Ximena Carabali","Beatriz Vasquez"],uniforme:""},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Cristian Potes",bateria:"Andres Velez",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Wilder Marroquin",vocalista:"Jahdiel Lopez",voces:["Dulfais Nupan","Gloria Giraldo","Ximena Carabali","Beatriz Vasquez"],uniforme:""}]},
+  "2026-06-17":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"Cristian Potes",bateria:"Ramiro Espinoza",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Hector Velez",voces:["Claudia Marquez","Elizabeth Bonilla","Caridad","Gloria Guerrero"],uniforme:""},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Andres Velez",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Maira Caicedo",voces:["Elizabeth Bonilla","Janner Balanta","Maribel Montoya","Gina Palacios"],uniforme:""}]},
+  "2026-06-21":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Jahdiel Lopez",bateria:"Leandro Cosme",piano:"Alberth Martinez",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Ramiro Espinoza",voces:["Marly Mosquera","Dorany Gonzalez","Carlos Rua","Deisy Murillo"],uniforme:""},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Jahdiel Lopez",bateria:"Leandro Cosme",piano:"Alberth Martinez",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Ramiro Espinoza",voces:["Marly Mosquera","Dorany Gonzalez","Carlos Rua","Deisy Murillo"],uniforme:""}]},
+  "2026-06-24":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"Cristian Potes",bateria:"Andres Velez",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Katherine Choco",voces:["Gloria Guerrero","Beatriz Vasquez","Gina Palacios","Marly Mosquera"],uniforme:""},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Ramiro Espinoza",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Maira Caicedo",voces:["Dulfais Nupan","Maribel Montoya","Caridad","Ximena Carabali"],uniforme:""}]},
+  "2026-06-28":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Claudia Marquez","Elizabeth Bonilla","Janner Balanta","Caridad"],uniforme:""},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Claudia Marquez","Elizabeth Bonilla","Janner Balanta","Caridad"],uniforme:""}]},
   "2026-07-01":{type:"wed",services:[
-    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Gala"}
-  ]},
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Gala"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Emilio Cortes",voces:["Gloria Guerrero","Caridad","Janner Balanta","Katherine Choco"],uniforme:"Gala"}]},
   "2026-07-05":{type:"sun",services:[
     {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Dayana Cordoba","Maribel Montoya","Beatriz Vasquez","Gina Palacios"],uniforme:"Blanco y Negro"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Katherine Choco","Marly Mosquera","Dorany Gonzalez","Dayana Cordoba"],uniforme:"Blanco y Negro"}
-  ]},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Katherine Choco","Marly Mosquera","Dorany Gonzalez","Dayana Cordoba"],uniforme:"Blanco y Negro"}]},
   "2026-07-08":{type:"wed",services:[
     {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Negro y Beige"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Jahdiel Lopez",voces:["Gloria Guerrero","Katherine Choco","Caridad","Janner Balanta"],uniforme:"Negro y Beige"}
-  ]},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Jahdiel Lopez",voces:["Gloria Guerrero","Katherine Choco","Caridad","Janner Balanta"],uniforme:"Negro y Beige"}]},
   "2026-07-11":{type:"sat",services:[
-    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Caridad",voces:[],uniforme:"Gala"}
-  ]},
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Caridad",voces:[],uniforme:"Gala"}]},
   "2026-07-12":{type:"sun",services:[
     {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Wilder Marroquin",vocalista:"Jahdiel Lopez",voces:["Gloria Guerrero","Maira Caicedo","Maribel Montoya","Beatriz Vasquez"],uniforme:"Gala"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Ezequiel Cosme",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Katherine Choco",voces:["Maira Caicedo","Gina Palacios","Marly Mosquera","Dorany Gonzalez"],uniforme:"Gala"}
-  ]},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Ezequiel Cosme",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Katherine Choco",voces:["Maira Caicedo","Gina Palacios","Marly Mosquera","Dorany Gonzalez"],uniforme:"Gala"}]},
   "2026-07-15":{type:"wed",services:[
     {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Dayana Cordoba","Gina Palacios","Claudia Marquez","Gloria Giraldo"],uniforme:"Rojo y Negro"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Katherine Choco",voces:["Ximena Carabali","Elizabeth Bonilla","Gloria Guerrero","Caridad"],uniforme:"Rojo y Negro"}
-  ]},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Katherine Choco",voces:["Ximena Carabali","Elizabeth Bonilla","Gloria Guerrero","Caridad"],uniforme:"Rojo y Negro"}]},
   "2026-07-18":{type:"sat",services:[
-    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Elizabeth Bonilla",voces:[],uniforme:"Gala"}
-  ]},
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Elizabeth Bonilla",voces:[],uniforme:"Gala"}]},
   "2026-07-19":{type:"sun",services:[
     {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Janner Balanta","Dayana Cordoba","Maribel Montoya","Maira Caicedo"],uniforme:"Blanco y Gris"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"No asignado",vocalista:"Maira Caicedo",voces:["Beatriz Vasquez","Katherine Choco","Gina Palacios","Marly Mosquera"],uniforme:"Blanco y Gris"}
-  ]},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"No asignado",vocalista:"Maira Caicedo",voces:["Beatriz Vasquez","Katherine Choco","Gina Palacios","Marly Mosquera"],uniforme:"Blanco y Gris"}]},
   "2026-07-22":{type:"wed",services:[
     {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Ramiro Espinoza",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Beatriz Vasquez","Dorany Gonzalez","Ximena Carabali","Claudia Marquez"],uniforme:"Lila y Gris"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Cristian Potes",bateria:"Wilder Marroquin",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Gloria Giraldo","Dayana Cordoba","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Lila y Gris"}
-  ]},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Gloria Giraldo","Dayana Cordoba","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Lila y Gris"}]},
   "2026-07-25":{type:"sat",services:[
-    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Dorany Gonzalez",voces:[],uniforme:"Gala"}
-  ]},
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Dorany Gonzalez",voces:[],uniforme:"Gala"}]},
   "2026-07-26":{type:"sun",services:[
     {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Gloria Guerrero","Dayana Cordoba","Maribel Montoya","Caridad"],uniforme:"Gala"},
-    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Janner Balanta","Maira Caicedo","Katherine Choco","Beatriz Vasquez"],uniforme:"Gala"}
-  ]},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Ramiro Espinoza",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Janner Balanta","Maira Caicedo","Katherine Choco","Beatriz Vasquez"],uniforme:"Gala"}]},
   "2026-07-29":{type:"wed",services:[
     {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Gina Palacios","Marly Mosquera","Dorany Gonzalez","Dayana Cordoba"],uniforme:"Negro y Beige"},
-    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Negro y Beige"}
-  ]}
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Claudia Marquez","Gloria Giraldo","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Negro y Beige"}]},
+  "2026-08-02":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Dayana Cordoba","Maribel Montoya","Claudia Marquez","Gloria Giraldo"],uniforme:"Gala"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Maira Caicedo","Ximena Carabali","Elizabeth Bonilla","Gloria Guerrero"],uniforme:"Gala"}]},
+  "2026-08-05":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Caridad","Janner Balanta","Deisy Murillo","Beatriz Vasquez"],uniforme:"Negro y Beige"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Ezequiel Cosme",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Hector Velez",voces:["Katherine Choco","Dayana Cordoba","Gina Palacios","Marly Mosquera"],uniforme:"Negro y Beige"}]},
+  "2026-08-08":{type:"sat",services:[
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Caridad",voces:[],uniforme:"Gala"}]},
+  "2026-08-09":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Dorany Gonzalez","Maribel Montoya","Carlos Rua","Claudia Marquez"],uniforme:"Blanco y Negro"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ezequiel Cosme",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Maira Caicedo",voces:["Gloria Giraldo","Katherine Choco","Ximena Carabali","Elizabeth Bonilla"],uniforme:"Blanco y Negro"}]},
+  "2026-08-12":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Gloria Guerrero","Caridad","Janner Balanta","Deisy Murillo"],uniforme:"Rojo y Negro"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Emilio Cortes",voces:["Dulfais Nupan","Beatriz Vasquez","Gina Palacios","Marly Mosquera"],uniforme:"Rojo y Negro"}]},
+  "2026-08-15":{type:"sat",services:[
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Elizabeth Bonilla",voces:[],uniforme:"Gala"}]},
+  "2026-08-16":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Emilio Cortes",voces:["Dorany Gonzalez","Maribel Montoya","Carlos Rua","Claudia Marquez"],uniforme:"Gala"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"No asignado",vocalista:"Katherine Choco",voces:["Gloria Giraldo","Dayana Cordoba","Maira Caicedo","Ximena Carabali"],uniforme:"Gala"}]},
+  "2026-08-19":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Ramiro Espinoza",piano:"Alberth Martinez",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Hector Velez",voces:["Elizabeth Bonilla","Gloria Guerrero","Caridad","Janner Balanta"],uniforme:"Blanco y Gris"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Jahdiel Lopez",bateria:"Wilder Marroquin",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Ramiro Espinoza",voces:["Dulfais Nupan","Deisy Murillo","Beatriz Vasquez","Gina Palacios"],uniforme:"Blanco y Gris"}]},
+  "2026-08-22":{type:"sat",services:[
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Gloria Giraldo",voces:[],uniforme:"Gala"}]},
+  "2026-08-23":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Wilder Marroquin",vocalista:"Jahdiel Lopez",voces:["Marly Mosquera","Maribel Montoya","Dorany Gonzalez","Carlos Rua"],uniforme:"Lila y Gris"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Andres Velez",piano:"Ezequiel Cosme",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Wilder Marroquin",vocalista:"Maira Caicedo",voces:["Claudia Marquez","Dayana Cordoba","Gloria Giraldo","Ximena Carabali"],uniforme:"Lila y Gris"}]},
+  "2026-08-26":{type:"wed",services:[
+    {time:"5:00 pm",range:"5:00 pm – 7:00 pm",bajo:"No asignado",bateria:"Andres Velez",piano:"Dayana Cordoba",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Ramiro Espinoza",voces:["Elizabeth Bonilla","Gloria Guerrero","Caridad","Janner Balanta"],uniforme:"Gala"},
+    {time:"7:00 pm",range:"7:00 pm – 9:00 pm",bajo:"Leandro Cosme",bateria:"Wilder Marroquin",piano:"Ramiro Espinoza",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Katherine Choco",voces:["Deisy Murillo","Beatriz Vasquez","Gina Palacios","Marly Mosquera"],uniforme:"Gala"}]},
+  "2026-08-29":{type:"sat",services:[
+    {time:"ayuno",range:"Ayuno",bajo:"No asignado",bateria:"No asignado",piano:"No asignado",guitarra:"No asignado",saxofon:"No asignado",percusiones:"No asignado",vocalista:"Maribel Montoya",voces:[],uniforme:"Gala"}]},
+  "2026-08-30":{type:"sun",services:[
+    {time:"8:00 am",range:"8:00 am – 10:00 am",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"Jhoan Mosquera",saxofon:"No asignado",percusiones:"Josue Ovalles",vocalista:"Emilio Cortes",voces:["Dorany Gonzalez","Dayana Cordoba","Carlos Rua","Claudia Marquez"],uniforme:"Negro y Beige"},
+    {time:"10:30 am",range:"10:30 am – 12:30 pm",bajo:"Leandro Cosme",bateria:"Ramiro Espinoza",piano:"Cristian Potes",guitarra:"No asignado",saxofon:"Jhoan Mosquera",percusiones:"Josue Ovalles",vocalista:"Jahdiel Lopez",voces:["Gloria Giraldo","Maira Caicedo","Katherine Choco","Ximena Carabali"],uniforme:"Negro y Beige"}]}
 };
-
-const AVAILABLE=["2026-07"];
+const AVAILABLE=["2026-06","2026-07","2026-08"];
 const MONTHS_ES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DAYS_HDR=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 const INST_KEYS=["bajo","bateria","piano","guitarra","saxofon","percusiones"];
@@ -529,7 +600,7 @@ function inSvcActive(sv){
   return false;
 }
 function countSvcsRole(name,role){
-  let n=0;Object.values(DATA).forEach(d=>d.services.forEach(sv=>{if(inSvcByRole(name,role,sv))n++;}));return n;
+  let n=0;monthEntries().forEach(d=>d.services.forEach(sv=>{if(inSvcByRole(name,role,sv))n++;}));return n;
 }
 function filteredSvcs(services){
   if(!S.filter)return services;
@@ -537,9 +608,10 @@ function filteredSvcs(services){
 }
 
 /* ─── PEOPLE ─── */
-function vocalistas(){const s=new Set();Object.values(DATA).forEach(d=>d.services.forEach(sv=>{if(sv.vocalista&&sv.vocalista!=="No asignado")s.add(sv.vocalista);}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
-function vocesApoyo(){const s=new Set();Object.values(DATA).forEach(d=>d.services.forEach(sv=>{sv.voces.forEach(v=>{if(v&&v!=="No asignado")s.add(v);});}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
-function musicos(){const s=new Set();Object.values(DATA).forEach(d=>d.services.forEach(sv=>{INST_KEYS.forEach(k=>{if(sv[k]&&sv[k]!=="No asignado")s.add(sv[k]);});}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
+function monthEntries(){return Object.entries(DATA).filter(([k])=>k.startsWith(S.month)).map(([,v])=>v);}
+function vocalistas(){const s=new Set();monthEntries().forEach(d=>d.services.forEach(sv=>{if(sv.vocalista&&sv.vocalista!=="No asignado")s.add(sv.vocalista);}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
+function vocesApoyo(){const s=new Set();monthEntries().forEach(d=>d.services.forEach(sv=>{sv.voces.forEach(v=>{if(v&&v!=="No asignado")s.add(v);});}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
+function musicos(){const s=new Set();monthEntries().forEach(d=>d.services.forEach(sv=>{INST_KEYS.forEach(k=>{if(sv[k]&&sv[k]!=="No asignado")s.add(sv[k]);});}));return [...s].sort((a,b)=>a.localeCompare(b,"es"));}
 
 const PAL=[{bg:"#DBEAFE",c:"#1E40AF"},{bg:"#FEF3C7",c:"#92400E"},{bg:"#D1FAE5",c:"#065F46"},{bg:"#EDE9FE",c:"#5B21B6"},{bg:"#FCE7F3",c:"#9D174D"},{bg:"#FFEDD5",c:"#9A3412"},{bg:"#CCFBF1",c:"#0F766E"},{bg:"#E0F2FE",c:"#0369A1"},{bg:"#F0FDF4",c:"#15803D"},{bg:"#FEE2E2",c:"#991B1B"}];
 function pal(n){let h=0;for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h);return PAL[Math.abs(h)%PAL.length];}
@@ -551,7 +623,7 @@ function filterHTML(){
   const clearBtn=S.filter?`<button class="filter-clear-icon" onclick="clearFilter()" title="Borrar filtro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg></button>`:"";
   function minItem(name,role){
     if(q&&!name.toLowerCase().includes(q))return "";
-    const p=pal(name);const cnt=countSvcsRole(name,role);const act=S.filter===name&&S.filterRoles.has(role);
+    const p=pal(name);const cnt=countSvcsRole(name,role);if(!cnt)return "";const act=S.filter===name&&S.filterRoles.has(role);
     return `<div class="min-item${act?" active":""}" data-n="${name}" data-r="${role}" onclick="setFilter(this.dataset.n,this.dataset.r)">
       <div class="avatar" style="background:${p.bg};color:${p.c}">${initials(name)}</div>
       <span class="min-name">${name}</span>
@@ -643,31 +715,49 @@ const TYPE_COLOR={wed:'#2563EB',sat:'#4ADE80',sun:'#FACC15'};
 const TYPE_LABEL_S={wed:'Miércoles',sat:'Sábado',sun:'Domingo'};
 const ROLE_COLOR={vocalista:'#8B5CF6',voz:'#EC4899',musico:'#F97316'};
 const ROLE_LABEL_S={vocalista:'Vocalista Principal',voz:'Voz de Apoyo',musico:'Músico'};
-const WEEK_STARTS=['2026-06-29','2026-07-06','2026-07-13','2026-07-20','2026-07-27'];
+function getMonthWeekStarts(month){
+  const [yr,mo]=month.split('-').map(Number);
+  const first=new Date(yr,mo-1,1);
+  const dow=first.getDay()===0?6:first.getDay()-1; // Monday=0
+  const monBefore=new Date(yr,mo-1,1-dow);
+  const days=new Date(yr,mo,0).getDate();
+  const weeks=[];
+  let d=new Date(monBefore);
+  while(d<new Date(yr,mo-1,days+1)){
+    const s=d.toISOString().slice(0,10);
+    weeks.push(s);
+    d=new Date(d.getTime()+7*86400000);
+  }
+  return weeks;
+}
 
 function computeStats(name){
+  const monthData=Object.entries(DATA).filter(([k])=>k.startsWith(S.month));
+  const WEEK_STARTS=getMonthWeekStarts(S.month);
+  const nextMonth=S.month.slice(0,4)+'-'+String(Number(S.month.slice(5,7))%12+1).padStart(2,'0');
   const byType={wed:0,sat:0,sun:0};
   const byRole={vocalista:0,voz:0,musico:0};
   const byWeek=WEEK_STARTS.map(()=>({wed:0,sat:0,sun:0}));
-  Object.entries(DATA).forEach(([dk,dd])=>{
+  const activeRoles=S.filterRoles&&S.filterRoles.size>0?S.filterRoles:new Set(['vocalista','voz','musico']);
+  monthData.forEach(([dk,dd])=>{
     dd.services.forEach(sv=>{
-      if(![sv.vocalista,...sv.voces,...INST_KEYS.map(k=>sv[k])].includes(name))return;
+      const participates=[...activeRoles].some(r=>inSvcByRole(name,r,sv));
+      if(!participates)return;
       byType[dd.type]++;
-      if(sv.vocalista===name)byRole.vocalista++;
-      if(sv.voces.includes(name))byRole.voz++;
-      if(INST_KEYS.some(k=>sv[k]===name))byRole.musico++;
-      const wi=WEEK_STARTS.findIndex((ws,i)=>dk>=ws&&dk<(WEEK_STARTS[i+1]||'2026-08-01'));
+      if(activeRoles.has('vocalista')&&sv.vocalista===name)byRole.vocalista++;
+      if(activeRoles.has('voz')&&sv.voces.includes(name))byRole.voz++;
+      if(activeRoles.has('musico')&&INST_KEYS.some(k=>sv[k]===name))byRole.musico++;
+      const wi=WEEK_STARTS.findIndex((ws,i)=>dk>=ws&&dk<(WEEK_STARTS[i+1]||nextMonth+'-01'));
       if(wi>=0)byWeek[wi][dd.type]++;
     });
   });
-  // rest dates: service dates where minister has no participation
+  // rest dates: service dates in month where minister has no participation in selected roles
   const restDates=[];
-  const longDate2=new Intl.DateTimeFormat('es-CO',{day:'numeric',month:'long'});
-  Object.entries(DATA).forEach(([dk,dd])=>{
-    const inAny=dd.services.some(sv=>[sv.vocalista,...sv.voces,...INST_KEYS.map(k=>sv[k])].includes(name));
+  monthData.forEach(([dk,dd])=>{
+    const inAny=dd.services.some(sv=>[...activeRoles].some(r=>inSvcByRole(name,r,sv)));
     if(!inAny)restDates.push(dk);
   });
-  return{byType,byRole,byWeek,restDates};
+  return{byType,byRole,byWeek,restDates,weekStarts:WEEK_STARTS};
 }
 
 function renderDonut(byType){
@@ -771,7 +861,7 @@ function renderStats(){
     if(scrollBody){scrollBody.classList.remove('stats-active');clearStatsScroll();}
     return;
   }
-  const {byType,byRole,byWeek,restDates}=computeStats(S.filter);
+  const {byType,byRole,byWeek,restDates,weekStarts}=computeStats(S.filter);
   panel.innerHTML=`
     <div class="stat-card">
       <p class="stat-title">Tipos de servicio</p>
@@ -825,7 +915,7 @@ function renderMonthView(){
     const dd=DATA[dk];const isToday=dk===todayStr;
     const mmdd=`${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
     const bdayNames=BIRTHDAYS[mmdd]||[];
-    const bdayChip=bdayNames.length?bdayNames.map(n=>{const parts=n.split(" ");const first=parts[0];const last=parts.slice(1).join(" ");return`<button class="bday-chip" onclick="event.stopPropagation();openBdayCard('${n}','${mmdd}')" style="border:none;cursor:pointer;font-family:inherit;text-align:left;width:100%"><span class="bday-emoji">🎂</span><strong><span style="display:block">${first}</span>${last?`<span style="display:block">${last}</span>`:""}</strong></button>`;}).join(""):"";
+    const bdayChip=bdayNames.length?bdayNames.map(n=>{const parts=n.split(" ");const first=parts[0];const last=parts.slice(1).join(" ");return`<button class="bday-chip" onclick="event.stopPropagation();openBdayCard('${n}','${mmdd}')" style="border:none;cursor:pointer;font-family:inherit;text-align:left;width:100%"><span class="bday-emoji">🎂</span><strong><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${first}</span></strong></button>`;}).join(""):"";
     const hasBday=bdayNames.length>0;
     if(dd){
       const svcs=filteredSvcs(dd.services);
@@ -837,7 +927,8 @@ function renderMonthView(){
       h+=`<div class="day-cell${isToday?" today":""}${hasBday?" has-bday has-events":""}" data-dk="${dk}" ${cellClick}><div class="d-num">${d}</div><div class="d-chips">${bdayChip}</div></div>`;
     }
   }
-  $("calGrid").removeAttribute("style");$("calGrid").className="cal-grid";$("calGrid").innerHTML=h;
+  const numRows=Math.ceil((off+days)/7);
+  $("calGrid").removeAttribute("style");$("calGrid").className="cal-grid";$("calGrid").innerHTML=h;$("calGrid").dataset.weeks=numRows;
   $("calGrid").querySelectorAll(".svc-card").forEach(btn=>{btn.addEventListener("click",e=>{e.stopPropagation();openDetail(btn.dataset.dk,Number(btn.dataset.i),btn);});});
   $("calGrid").querySelectorAll(".day-cell.has-events").forEach(cell=>{cell.addEventListener("click",e=>{if(e.target.closest(".svc-card"))return;const dd=DATA[cell.dataset.dk];if(!dd)return;const svcs=filteredSvcs(dd.services);if(!svcs.length)return;openDetail(cell.dataset.dk,0,cell);});});
 }
@@ -943,7 +1034,7 @@ function openBdayCard(name, mmdd){
   const mount=$('bdayMount');
   const dateStr=BDAY_DATES[name]||mmdd;
   mount.innerHTML=`<div class="bday-card" id="bdayCard">
-    <span class="bday-card-emoji">🎂🕯️</span>
+    <span class="bday-card-emoji">🎂</span>
     <div class="bday-card-label">¡Feliz cumpleaños!</div>
     <div class="bday-card-name">${name}</div>
     <div class="bday-card-date">🎉 ${dateStr}</div>
