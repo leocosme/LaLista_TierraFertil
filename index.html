@@ -297,9 +297,12 @@ body{
 .stat-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.10em;color:#111827;margin:0 0 14px;text-align:center}
 
 /* ─── BIRTHDAY ─── */
-.bday-chip{display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 4px;border-radius:0;background:transparent;border:none;line-height:1.3;margin-top:2px;overflow:hidden;width:100%;box-sizing:border-box;text-align:center;}
+.bday-chip{display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 4px;border-radius:0;background:transparent;border:none;line-height:1.3;margin-top:0;overflow:hidden;width:100%;box-sizing:border-box;text-align:center;}
 .bday-chip .bday-emoji{font-size:clamp(10px,2vw,14px);line-height:1;}
 .bday-chip strong{color:#111827;font-weight:800;font-size:clamp(7.5px,1.75vw,10px);line-height:1.2;display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;}
+/* chip compacto cuando hay servicios en el mismo día */
+.day-cell.has-events.has-bday .bday-chip{flex-direction:row;gap:3px;padding:1px 3px;margin-bottom:2px;}
+.day-cell.has-events.has-bday .bday-chip strong{font-size:clamp(7px,1.6vw,9px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .day-cell.has-bday{background:#FFF0F7;}
 .day-cell.has-bday .d-num{color:#BE185D;}
 
@@ -923,10 +926,10 @@ function renderMonthView(){
       const svcs=filteredSvcs(dd.services);
       const cards=svcs.map(sv=>`<button class="svc-card ${dd.type}" data-dk="${dk}" data-i="${dd.services.indexOf(sv)}"><span class="svc-time">${sv.time.toUpperCase()}</span><span class="svc-name">${sv.vocalista.split(" ")[0]}</span></button>`).join("");
       const hasSvc=svcs.length>0;
-      h+=`<div class="day-cell${hasSvc?" has-events":""}${isToday?" today":""}${hasBday?" has-bday":""}" data-dk="${dk}"><div class="d-num">${d}</div><div class="d-chips">${cards}${bdayChip}</div></div>`;
+      h+=`<div class="day-cell${hasSvc?" has-events":""}${isToday?" today":""}${hasBday?" has-bday":""}" data-dk="${dk}"><div class="d-num">${d}</div><div class="d-chips">${bdayChip}${cards}</div></div>`;
     } else {
       const cellClick=hasBday?`onclick="openBdayCard('${bdayNames[0]}','${mmdd}')" style="cursor:pointer"`:"";
-      h+=`<div class="day-cell${isToday?" today":""}${hasBday?" has-bday has-events":""}" data-dk="${dk}" ${cellClick}><div class="d-num">${d}</div><div class="d-chips">${bdayChip}</div></div>`;
+      h+=`<div class="day-cell${isToday?" today":""}${hasBday?" has-bday":""}" data-dk="${dk}" ${cellClick}><div class="d-num">${d}</div><div class="d-chips">${bdayChip}</div></div>`;
     }
   }
   const numRows=Math.ceil((off+days)/7);
