@@ -301,6 +301,9 @@ body{
 /* chip compacto cuando hay servicios en el mismo día */
 .day-cell.has-events.has-bday .bday-chip{flex-direction:row;gap:3px;padding:1px 3px;margin-bottom:2px;}
 .day-cell.has-events.has-bday .bday-chip strong{font-size:clamp(7px,1.6vw,9px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* chip grande cuando el día solo tiene cumpleaños */
+.day-cell.has-bday:not(.has-events) .bday-chip .bday-emoji{font-size:25px;}
+.day-cell.has-bday:not(.has-events) .bday-chip strong{font-size:10px;}
 .day-cell.has-bday{background:#FFF0F7;}
 .day-cell.has-bday .d-num{color:#BE185D;}
 
